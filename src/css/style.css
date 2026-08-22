@@ -67,7 +67,7 @@ body, html {
 /* App Layout Grid */
 #app {
   display: grid;
-  grid-template-rows: 64px 1fr 220px;
+  grid-template-rows: 48px 1fr auto;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -208,7 +208,7 @@ body, html {
 canvas#physics-canvas {
   display: block;
   max-width: 98%;
-  max-height: 98%;
+  max-height: calc(100vh - 160px);
   aspect-ratio: 16 / 9;
   border: 1px solid var(--border-neon);
   border-radius: 8px;
@@ -262,8 +262,8 @@ canvas#physics-canvas {
   border-top: 1px solid var(--border-neon);
   display: flex;
   flex-direction: column;
-  padding: 12px 24px;
-  gap: 10px;
+  padding: 8px 16px;
+  gap: 6px;
   box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7);
   z-index: 10;
 }

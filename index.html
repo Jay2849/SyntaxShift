@@ -63,19 +63,13 @@
 
     <!-- Bottom Terminal Control Dock -->
     <footer class="dock-container">
-      <!-- Quick Prompt Suggestions Chips -->
+      <!-- Clean 3 Quick Prompts + More Button -->
       <div class="preset-chips-row" id="preset-chips-container">
         <span class="chip-label">Quick Prompts:</span>
         <button class="chip-btn" data-prompt="Invert gravity upside down">🌀 Invert Gravity</button>
         <button class="chip-btn" data-prompt="Lift only red blocks upward">📦 Lift Red Blocks</button>
         <button class="chip-btn" data-prompt="Float Spark in zero gravity">🌌 Zero-G Float</button>
-        <button class="chip-btn" data-prompt="Push Spark top right corner">↗️ Push Top-Right</button>
-        <button class="chip-btn" data-prompt="Invert gravity for blue blocks">🟦 Lift Blue Platforms</button>
-        <button class="chip-btn" data-prompt="Create a black hole at center">🕳️ Create Black Hole</button>
-        <button class="chip-btn" data-prompt="Make Spark super bouncy with zero friction">⚡ Bouncy Spark</button>
-        <button class="chip-btn" data-prompt="Push Spark to the right">➡️ Push Right</button>
-        <button class="chip-btn" data-prompt="Oscillate red blocks in zero gravity">🌊 Oscillate Red</button>
-        <button class="chip-btn" data-prompt="Reset to normal gravity">🔄 Reset 1G</button>
+        <button class="chip-btn" id="btn-more-prompts" style="background: rgba(181, 55, 242, 0.15); border-color: var(--neon-purple); color: #fff;">➕ More Prompts...</button>
       </div>
 
       <!-- Natural Language Terminal Bar -->
@@ -135,6 +129,58 @@
       </div>
       <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
         <button class="btn-icon danger" id="btn-close-levels">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Prompts Library Modal -->
+  <div class="modal-overlay" id="modal-more-prompts">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-title">⚡ All Chamber Physics Solution Directives</div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
+        <div>
+          <strong style="color: var(--neon-cyan);">CHAMBER 01: Inversion Tutorial</strong>
+          <div style="display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;">
+            <button class="chip-btn modal-chip" data-prompt="Invert gravity upside down">🌀 Invert Gravity</button>
+            <button class="chip-btn modal-chip" data-prompt="Reverse gravity upward">⬆️ Reverse Upward</button>
+          </div>
+        </div>
+
+        <div>
+          <strong style="color: var(--neon-pink);">CHAMBER 02: Selective Mass Separation</strong>
+          <div style="display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;">
+            <button class="chip-btn modal-chip" data-prompt="Lift only red blocks upward">📦 Lift Red Blocks</button>
+            <button class="chip-btn modal-chip" data-prompt="Invert gravity for red blocks">🛑 Invert Red Only</button>
+          </div>
+        </div>
+
+        <div>
+          <strong style="color: var(--neon-purple);">CHAMBER 03: Gravitational Chasm</strong>
+          <div style="display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;">
+            <button class="chip-btn modal-chip" data-prompt="Float Spark in zero gravity">🌌 Zero-G Float</button>
+            <button class="chip-btn modal-chip" data-prompt="Push Spark top right corner">↗️ Push Top-Right</button>
+          </div>
+        </div>
+
+        <div>
+          <strong style="color: var(--neon-yellow);">CHAMBER 04: Kinetic Pendulum Inversion</strong>
+          <div style="display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;">
+            <button class="chip-btn modal-chip" data-prompt="Invert gravity for blue blocks">🟦 Lift Blue Platforms</button>
+            <button class="chip-btn modal-chip" data-prompt="Push Spark to the right">➡️ Push Spark Right</button>
+          </div>
+        </div>
+
+        <div>
+          <strong style="color: var(--neon-green);">CHAMBER 05: Laser Labyrinth</strong>
+          <div style="display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;">
+            <button class="chip-btn modal-chip" data-prompt="Create a black hole at center">🕳️ Create Black Hole</button>
+            <button class="chip-btn modal-chip" data-prompt="Make Spark super bouncy with zero friction">⚡ Bouncy Spark</button>
+            <button class="chip-btn modal-chip" data-prompt="Oscillate red blocks in zero gravity">🌊 Oscillate Red</button>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
+        <button class="btn-icon danger" id="btn-close-more-prompts">Close</button>
       </div>
     </div>
   </div>

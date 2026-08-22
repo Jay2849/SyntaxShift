@@ -102,6 +102,28 @@ export class TerminalUI {
 
     document.getElementById('btn-inspect-json')?.addEventListener('click', () => this.openJsonModal());
     document.getElementById('btn-close-json')?.addEventListener('click', () => this.closeJsonModal());
+
+    // More Prompts Modal
+    const modalMore = document.getElementById('modal-more-prompts');
+    document.getElementById('btn-more-prompts')?.addEventListener('click', () => {
+      this.soundEngine.playKeystroke();
+      modalMore?.classList.add('active');
+    });
+    document.getElementById('btn-close-more-prompts')?.addEventListener('click', () => {
+      modalMore?.classList.remove('active');
+    });
+
+    modalMore?.addEventListener('click', (e) => {
+      const chip = e.target.closest('.modal-chip');
+      if (!chip) return;
+      const promptText = chip.getAttribute('data-prompt');
+      if (promptText) {
+        this.terminalInput.value = promptText;
+        this.soundEngine.playKeystroke();
+        modalMore.classList.remove('active');
+        this.handlePromptExecution(promptText);
+      }
+    });
   }
 
   async handlePromptExecution(promptText) {
