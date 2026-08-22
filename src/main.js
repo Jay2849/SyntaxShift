@@ -68,38 +68,45 @@ window.addEventListener('DOMContentLoaded', () => {
   // 4. Load initial chamber
   levelManager.loadChamber(0);
 
-  // 5. Main Game & High-Precision Render Loop (60 FPS)
+  // 5. Unstoppable Main Game Animation Loop (60 FPS)
   function renderLoop() {
-    // Step Matter.js physics engine with fixed 60 FPS delta
-    physicsWorld.update(16.666);
-
-    const isInv = physicsWorld.antiGravityEngine.isGlobalInverted;
-    const gVec = physicsWorld.antiGravityEngine.currentGravityVector;
-
-    // 1. Draw High-Clarity Stage Background & Vector Grid
-    visualJuice.drawStageBackground(isInv, gVec);
-
-    // 2. Draw Rigid Bodies with Metadata Labels (Red Barrier, Blue Platform, Crates)
-    const bodies = Matter.Composite.allBodies(physicsWorld.world);
-    visualJuice.drawBodies(bodies);
-
-    // 3. Draw Hazard Lasers & Spikes
-    visualJuice.drawHazards(physicsWorld.entities.lasers, physicsWorld.entities.spikes);
-
-    // 4. Draw Goal Portal Vortex with Target Label
-    visualJuice.drawPortal(physicsWorld.entities.portal);
-
-    // 5. Draw Spark Protagonist with Velocity Vector
-    visualJuice.drawSpark(physicsWorld.entities.spark);
-
-    // 6. Draw Selective Anti-Gravity Force Vector Badges
-    visualJuice.drawEntityVectorBadges(physicsWorld.antiGravityEngine.activeEntityModifiers);
-
-    // 7. Draw Large Stage Banner Notification
-    visualJuice.drawBannerNotification();
-
+    // Schedule next frame FIRST to guarantee loop never freezes
     requestAnimationFrame(renderLoop);
+
+    try {
+      // Step Matter.js physics engine with fixed 60 FPS delta
+      physicsWorld.update(16.666);
+
+      const isInv = physicsWorld.antiGravityEngine.isGlobalInverted;
+      const gVec = physicsWorld.antiGravityEngine.currentGravityVector;
+
+      // 1. Draw High-Clarity Stage Background & Vector Grid
+      visualJuice.drawStageBackground(isInv, gVec);
+
+      // 2. Draw Rigid Bodies (Barrier Walls, Blue Platforms, Crates)
+      const bodies = Matter.Composite.allBodies(physicsWorld.world);
+      visualJuice.drawBodies(bodies);
+
+      // 3. Draw Hazard Lasers & Spikes
+      visualJuice.drawHazards(physicsWorld.entities.lasers, physicsWorld.entities.spikes);
+
+      // 4. Draw Goal Portal Vortex with Target Label
+      visualJuice.drawPortal(physicsWorld.entities.portal);
+
+      // 5. Draw Spark Protagonist with Velocity Vector
+      visualJuice.drawSpark(physicsWorld.entities.spark);
+
+      // 6. Draw Selective Anti-Gravity Force Vector Badges
+      visualJuice.drawEntityVectorBadges(physicsWorld.antiGravityEngine.activeEntityModifiers);
+
+      // 7. Draw Large Stage Banner Notification
+      visualJuice.drawBannerNotification();
+
+    } catch (err) {
+      console.error("Render loop frame error:", err);
+    }
   }
 
+  // Start continuous loop
   requestAnimationFrame(renderLoop);
 });
