@@ -12,3 +12,5 @@ export function playSubBass(ctx) {
   osc.start();
   osc.stop(ctx.currentTime + 0.45);
 }
+
+export function getSubBassFreq() { return 60; }
