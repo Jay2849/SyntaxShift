@@ -6,7 +6,7 @@ import { SoundEngine } from './audio/SoundEngine.js';
 import { VisualJuice } from './ui/VisualJuice.js';
 import { TerminalUI } from './ui/TerminalUI.js';
 
-// Import Tadakta-Bhadakta Modules
+// Import Tadakta-Bhadakta & Frontend Overhaul Modules
 import { SparkTrailRenderer } from './ui/renderers/SparkTrailRenderer.js';
 import { SupernovaExplosionRenderer } from './ui/renderers/SupernovaExplosionRenderer.js';
 import { MatrixStreamRenderer } from './ui/renderers/MatrixStreamRenderer.js';
@@ -17,6 +17,11 @@ import { ChamberAssists } from './levels/ChamberAssists.js';
 import { playSupernovaExplosion } from './audio/synths/SupernovaExplosionSynth.js';
 import { VictoryModalController } from './ui/components/VictoryModalController.js';
 import { ScoringEngine } from './levels/ScoringEngine.js';
+import { LogConsoleDrawer } from './ui/components/LogConsoleDrawer.js';
+import { CameraShakeController } from './ui/CameraShakeController.js';
+import { renderTargetReticle } from './ui/renderers/TargetReticleRenderer.js';
+import { GravityCompassWidget } from './ui/components/GravityCompassWidget.js';
+import { renderAudioEqualizer } from './ui/components/AudioEqualizerWidget.js';
 
 /**
  * SYNTAXSHIFT MAIN APPLICATION ENTRY POINT
@@ -25,7 +30,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('physics-canvas');
   if (!canvas) return;
 
-  // Fixed 16:9 internal physics simulation resolution (960x540)
   const width = 960;
   const height = 540;
 
@@ -36,11 +40,15 @@ window.addEventListener('DOMContentLoaded', () => {
   const soundEngine = new SoundEngine();
   const visualJuice = new VisualJuice(physicsWorld.ctx, width, height);
 
-  // FX & Interactivity
+  // FX, Camera Shake & Interactive Components
   const sparkTrail = new SparkTrailRenderer();
   const supernovaExplosion = new SupernovaExplosionRenderer();
   const matrixStream = new MatrixStreamRenderer(width, height);
   const mouseInput = new MouseInputHandler(canvas);
+  const cameraShake = new CameraShakeController();
+  const logDrawer = new LogConsoleDrawer();
+
+  logDrawer.log("SyntaxShift Anti-Gravity Telemetry Kernel Initialized.");
 
   // 2. Initialize UI Controller
   const ui = new TerminalUI({
@@ -51,6 +59,8 @@ window.addEventListener('DOMContentLoaded', () => {
     onExecutePrompt: (payload) => {
       const result = physicsWorld.antiGravityEngine.executeAiPayload(payload, physicsWorld.entities);
       ui.updateHUD(levelManager.getHUDState());
+      cameraShake.shake(6);
+      logDrawer.log(`Physics Command Executed: ${payload.hudMessage}`);
 
       if (payload.hudMessage) {
         visualJuice.showBannerNotification(payload.hudMessage, "info", 2500);
@@ -58,13 +68,17 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  ui.logDrawer = logDrawer;
+
   // 3. Level Manager Callbacks
   levelManager.onStateChange = (hudState) => {
     ui.updateHUD(hudState);
+    logDrawer.log(`Chamber Loaded: ${hudState.chamberName}`);
   };
 
   levelManager.onWin = (chamber, timeSec, promptsUsed) => {
     ui.triggerWinEffect();
+    cameraShake.shake(15);
 
     if (physicsWorld.entities.spark) {
       const { x, y } = physicsWorld.entities.spark.position;
@@ -76,6 +90,7 @@ window.addEventListener('DOMContentLoaded', () => {
     VictoryModalController.show(chamber.name, timeSec, promptsUsed, rank);
     visualJuice.showBannerNotification(`🎉 EXTRACTION PORTAL REACHED! [${rank}]`, "success", 3000);
     ui.setMessage(`🎉 Extraction Portal Reached! Chamber ${chamber.number} Cleared! (${rank})`, "success");
+    logDrawer.log(`Chamber Cleared! Rank: ${rank}, Time: ${timeSec}s`);
 
     setTimeout(() => {
       levelManager.nextChamber();
@@ -84,8 +99,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   levelManager.onDeath = (hazardType) => {
     soundEngine.playDeathBuzz();
+    cameraShake.shake(12);
     visualJuice.showBannerNotification(`💥 SPARK DESTROYED BY ${hazardType.toUpperCase()}!`, "danger", 2000);
     ui.setMessage(`💥 Spark was destroyed by ${hazardType}! Rebuilding chamber...`, "danger");
+    logDrawer.log(`Spark Destroyed by ${hazardType}`);
     setTimeout(() => {
       levelManager.resetCurrentChamber();
     }, 1200);
@@ -94,7 +111,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // 4. Load initial chamber
   levelManager.loadChamber(0);
 
-  // 5. Main Animation Loop (60 FPS)
+  // 5. Unstoppable Main Animation Loop (60 FPS)
   function renderLoop() {
     requestAnimationFrame(renderLoop);
 
@@ -109,42 +126,56 @@ window.addEventListener('DOMContentLoaded', () => {
 
       const isInv = physicsWorld.antiGravityEngine.isGlobalInverted;
       const gVec = physicsWorld.antiGravityEngine.currentGravityVector;
+      const ctx = physicsWorld.ctx;
+
+      ctx.save();
+      // Apply Camera Shockwave Shake
+      cameraShake.update(ctx);
 
       // 1. Background Grid & Hacker Matrix Code Stream
       visualJuice.drawStageBackground(isInv, gVec);
-      matrixStream.render(physicsWorld.ctx);
+      matrixStream.render(ctx);
 
-      // 2. Trajectory Prediction Guide Line (For Easy Playability)
+      // 2. Directional Vector Compass Widget (Top Right of Stage)
+      GravityCompassWidget.renderCompass(ctx, width - 40, 40, gVec);
+
+      // 3. Audio Equalizer Indicator
+      renderAudioEqualizer(ctx, width - 80, 48, soundEngine.ctx && soundEngine.ctx.state === 'running');
+
+      // 4. Trajectory Prediction Guide Line (For Easy Playability)
       if (physicsWorld.entities.spark) {
         const { x, y } = physicsWorld.entities.spark.position;
-        ChamberAssists.renderTrajectoryGuide(physicsWorld.ctx, x, y, gVec);
+        ChamberAssists.renderTrajectoryGuide(ctx, x, y, gVec);
         sparkTrail.update(x, y);
-        sparkTrail.render(physicsWorld.ctx);
+        sparkTrail.render(ctx);
+        renderTargetReticle(ctx, x, y);
       }
 
-      // 3. Draw Interactive Mouse Laser Tether
+      // 5. Draw Interactive Mouse Laser Tether
       if (physicsWorld.entities.spark) {
         const { x, y } = physicsWorld.entities.spark.position;
-        renderGravityBeam(physicsWorld.ctx, x, y, mouseInput.mouseX, mouseInput.mouseY, mouseInput.isMouseDown);
+        renderGravityBeam(ctx, x, y, mouseInput.mouseX, mouseInput.mouseY, mouseInput.isMouseDown);
       }
 
-      // 4. Draw Rigid Bodies & Hazards
+      // 6. Draw Rigid Bodies & Hazards
       const bodies = Matter.Composite.allBodies(physicsWorld.world);
       visualJuice.drawBodies(bodies);
       visualJuice.drawHazards(physicsWorld.entities.lasers, physicsWorld.entities.spikes);
 
-      // 5. Draw Goal Portal Vortex
+      // 7. Draw Goal Portal Vortex
       visualJuice.drawPortal(physicsWorld.entities.portal);
 
-      // 6. Draw Spark Protagonist
+      // 8. Draw Spark Protagonist
       visualJuice.drawSpark(physicsWorld.entities.spark);
 
-      // 7. Draw Supernova Explosions & Force Badges
-      supernovaExplosion.render(physicsWorld.ctx);
+      // 9. Draw Supernova Explosions & Force Badges
+      supernovaExplosion.render(ctx);
       visualJuice.drawEntityVectorBadges(physicsWorld.antiGravityEngine.activeEntityModifiers);
 
-      // 8. Stage Banner Notification
+      // 10. Stage Banner Notification
       visualJuice.drawBannerNotification();
+
+      ctx.restore();
 
     } catch (err) {
       console.error("Render loop frame error:", err);

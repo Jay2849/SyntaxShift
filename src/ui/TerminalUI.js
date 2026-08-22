@@ -1,5 +1,6 @@
 import confetti from 'canvas-confetti';
 import { CHAMBER_CONFIGS } from '../levels/ChamberConfigs.js';
+import { LevelProgressBar } from './components/LevelProgressBar.js';
 
 /**
  * SYNTAXSHIFT - TERMINAL UI & UX CONTROLLER
@@ -80,7 +81,12 @@ export class TerminalUI {
       });
     }
 
-    // 3. Header Action Buttons
+    // Header Action Buttons
+    document.getElementById('btn-toggle-logs')?.addEventListener('click', () => {
+      this.soundEngine.playKeystroke();
+      if (this.logDrawer) this.logDrawer.toggle();
+    });
+
     document.getElementById('btn-open-levels')?.addEventListener('click', () => this.openLevelModal());
     document.getElementById('btn-close-levels')?.addEventListener('click', () => this.closeLevelModal());
 
@@ -146,6 +152,8 @@ export class TerminalUI {
   updateHUD(hudState) {
     this.hudLevelNum.textContent = `${hudState.levelIndex + 1} / ${hudState.totalLevels}`;
     this.hudEnergyCharges.textContent = `⚡ ${hudState.remainingEnergy} / ${hudState.maxEnergy}`;
+
+    LevelProgressBar.render('level-progress-container', hudState.levelIndex, hudState.totalLevels);
 
     this.cardChamberNum.textContent = hudState.chamberNum;
     this.cardChamberName.textContent = hudState.chamberName;
