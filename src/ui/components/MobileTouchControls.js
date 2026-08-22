@@ -13,12 +13,8 @@ export class MobileTouchControls {
     if (!this.container) return;
 
     this.container.innerHTML = `
-      <div class="mobile-controls-wrapper">
-        <button class="mobile-touch-btn flip-btn" data-action="Invert gravity upside down" title="Invert Gravity">
-          <span class="btn-icon-emoji">⚡</span>
-          <span class="btn-lbl">FLIP GRAV</span>
-        </button>
-
+      <!-- Left Gamepad Cluster (Left Thumb Directional Pushes) -->
+      <div class="mobile-controls-cluster cluster-left">
         <button class="mobile-touch-btn push-left-btn" data-action="Push Spark to the left" title="Push Left">
           <span class="btn-icon-emoji">⬅️</span>
           <span class="btn-lbl">LEFT</span>
@@ -28,15 +24,23 @@ export class MobileTouchControls {
           <span class="btn-icon-emoji">➡️</span>
           <span class="btn-lbl">RIGHT</span>
         </button>
+      </div>
+
+      <!-- Right Gamepad Cluster (Right Thumb Actions) -->
+      <div class="mobile-controls-cluster cluster-right">
+        <button class="mobile-touch-btn zerog-btn" data-action="Float Spark in zero gravity" title="Zero-G Float">
+          <span class="btn-icon-emoji">🌌</span>
+          <span class="btn-lbl">FLOAT</span>
+        </button>
 
         <button class="mobile-touch-btn boost-up-btn" data-action="Push Spark top upward" title="Boost Upward">
           <span class="btn-icon-emoji">🚀</span>
           <span class="btn-lbl">BOOST</span>
         </button>
 
-        <button class="mobile-touch-btn zerog-btn" data-action="Float Spark in zero gravity" title="Zero-G Float">
-          <span class="btn-icon-emoji">🌌</span>
-          <span class="btn-lbl">ZERO-G</span>
+        <button class="mobile-touch-btn flip-btn" data-action="Invert gravity upside down" title="Invert Gravity">
+          <span class="btn-icon-emoji">⚡</span>
+          <span class="btn-lbl">FLIP GRAV</span>
         </button>
       </div>
     `;
