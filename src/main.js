@@ -13,10 +13,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('physics-canvas');
   if (!canvas) return;
 
-  // Calculate canvas viewport dimensions (75% stage area)
-  const container = document.getElementById('stage-container');
-  const width = Math.min(container.clientWidth || 960, 1100);
-  const height = Math.min(container.clientHeight || 540, 600);
+  // Fixed 16:9 internal physics simulation resolution (960x540)
+  const width = 960;
+  const height = 540;
 
   // 1. Initialize Subsystems
   const physicsWorld = new PhysicsWorld(canvas, width, height);
