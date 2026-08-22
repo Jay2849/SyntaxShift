@@ -150,29 +150,34 @@ export class TerminalUI {
   }
 
   updateHUD(hudState) {
-    this.hudLevelNum.textContent = `${hudState.levelIndex + 1} / ${hudState.totalLevels}`;
-    this.hudEnergyCharges.textContent = `⚡ ${hudState.remainingEnergy} / ${hudState.maxEnergy}`;
+    if (!hudState) return;
+    if (this.hudLevelNum) this.hudLevelNum.textContent = `${hudState.levelIndex + 1} / ${hudState.totalLevels}`;
+    if (this.hudEnergyCharges) this.hudEnergyCharges.textContent = `⚡ ${hudState.remainingEnergy} / ${hudState.maxEnergy}`;
 
     LevelProgressBar.render('level-progress-container', hudState.levelIndex, hudState.totalLevels);
 
-    this.cardChamberNum.textContent = hudState.chamberNum;
-    this.cardChamberName.textContent = hudState.chamberName;
-    this.cardChamberObjective.textContent = hudState.chamberObjective;
+    if (this.cardChamberNum) this.cardChamberNum.textContent = hudState.chamberNum;
+    if (this.cardChamberName) this.cardChamberName.textContent = hudState.chamberName;
+    if (this.cardChamberObjective) this.cardChamberObjective.textContent = hudState.chamberObjective;
 
     // Gravity badge direction
-    const { x, y } = hudState.gravityVector;
-    const isInv = hudState.isGlobalInverted;
+    if (hudState.gravityVector) {
+      const { x, y } = hudState.gravityVector;
+      const isInv = hudState.isGlobalInverted;
 
-    this.gravText.textContent = `(${x.toFixed(1)}, ${y.toFixed(1)})`;
-    if (isInv) {
-      this.gravIcon.textContent = "⬆️";
-      this.hudGravityState.classList.add('inverted');
-    } else if (y === 0 && x === 0) {
-      this.gravIcon.textContent = "🌌";
-      this.hudGravityState.classList.remove('inverted');
-    } else {
-      this.gravIcon.textContent = "⬇️";
-      this.hudGravityState.classList.remove('inverted');
+      if (this.gravText) this.gravText.textContent = `(${x.toFixed(1)}, ${y.toFixed(1)})`;
+      if (this.gravIcon && this.hudGravityState) {
+        if (isInv) {
+          this.gravIcon.textContent = "⬆️";
+          this.hudGravityState.classList.add('inverted');
+        } else if (y === 0 && x === 0) {
+          this.gravIcon.textContent = "🌌";
+          this.hudGravityState.classList.remove('inverted');
+        } else {
+          this.gravIcon.textContent = "⬇️";
+          this.hudGravityState.classList.remove('inverted');
+        }
+      }
     }
   }
 
