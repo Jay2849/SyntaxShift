@@ -7,3 +7,4 @@ export function matchAuxiliaryModifiers(query) {
 }
 
 export function hasAuxiliaryModifiers(aux) { return Boolean(aux && (aux.friction !== null || aux.restitution !== null)); }
+/** AuxiliaryMatcher unit version 1.0 */
