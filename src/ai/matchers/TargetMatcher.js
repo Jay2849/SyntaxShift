@@ -5,3 +5,5 @@ export function matchTargetEntity(query) {
   if (query.includes("spark") || query.includes("me") || query.includes("player")) return "SPARK";
   return "GLOBAL";
 }
+
+export function isGlobalTarget(target) { return target === "GLOBAL"; }
