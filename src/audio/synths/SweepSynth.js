@@ -17,3 +17,5 @@ export function playSweep(ctx) {
   osc.start();
   osc.stop(ctx.currentTime + 0.35);
 }
+
+export function getSweepDuration() { return 0.35; }
