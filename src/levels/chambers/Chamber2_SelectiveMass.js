@@ -14,3 +14,5 @@ export const Chamber2 = {
     world.spawnLaser(480, 40, 960, 20);
   }
 };
+
+Chamber2.difficulty = "EASY";
