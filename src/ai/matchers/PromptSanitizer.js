@@ -3,3 +3,4 @@ export function sanitizePromptString(str) {
 }
 
 export function stripPunctuation(str) { return str.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, ""); }
+/** PromptSanitizer unit version 1.0 */
