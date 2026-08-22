@@ -15,3 +15,5 @@ export const Chamber3 = {
     world.spawnCrate(480, 250, 40, 40);
   }
 };
+
+Chamber3.difficulty = "MEDIUM";
