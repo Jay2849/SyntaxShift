@@ -12,3 +12,5 @@ export function playDeathBuzzSound(ctx) {
   osc.start();
   osc.stop(ctx.currentTime + 0.25);
 }
+
+export function getDeathBuzzDuration() { return 0.25; }
