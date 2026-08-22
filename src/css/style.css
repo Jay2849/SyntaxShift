@@ -496,3 +496,241 @@ pre.json-inspector {
     filter: none;
   }
 }
+
+/* ==========================================================================
+   ANDROID & MOBILE RESPONSIVE TOUCH OVERLAY STYLES
+   ========================================================================== */
+
+canvas#physics-canvas {
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.mobile-touch-controls {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 20;
+  display: flex;
+  gap: 8px;
+}
+
+.mobile-controls-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(6, 9, 16, 0.85);
+  border: 1px solid var(--border-neon);
+  padding: 6px 10px;
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.mobile-touch-btn {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  touch-action: manipulation;
+  transition: all 0.15s ease;
+  min-height: 40px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-touch-btn:active, .mobile-touch-btn.active-touch {
+  background: var(--neon-cyan);
+  color: #000;
+  transform: scale(0.95);
+  box-shadow: 0 0 15px var(--neon-cyan);
+}
+
+.mobile-touch-btn.flip-btn {
+  border-color: var(--neon-pink);
+  color: var(--neon-pink);
+}
+
+.mobile-touch-btn.flip-btn:active, .mobile-touch-btn.flip-btn.active-touch {
+  background: var(--neon-pink);
+  color: #fff;
+  box-shadow: 0 0 15px var(--neon-pink);
+}
+
+.mobile-touch-btn.zerog-btn {
+  border-color: var(--neon-purple);
+  color: var(--neon-purple);
+}
+
+.mobile-touch-btn.zerog-btn:active, .mobile-touch-btn.zerog-btn.active-touch {
+  background: var(--neon-purple);
+  color: #fff;
+  box-shadow: 0 0 15px var(--neon-purple);
+}
+
+.btn-icon-emoji {
+  font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   MEDIA QUERIES FOR SMALL MOBILE SCREENS & TABLETS (ANDROID / IOS)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  #app {
+    grid-template-rows: auto 1fr auto;
+    height: 100dvh;
+  }
+
+  .hud-bar {
+    grid-template-columns: 1fr auto;
+    row-gap: 8px;
+    padding: 8px 12px;
+    height: auto;
+    flex-wrap: wrap;
+  }
+
+  .brand-title {
+    font-size: 1rem;
+  }
+
+  .brand-badge {
+    display: none;
+  }
+
+  .hud-stats {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+    width: 100%;
+    gap: 6px;
+  }
+
+  .stat-box {
+    padding: 3px 6px;
+    font-size: 0.7rem;
+  }
+
+  .hud-actions {
+    gap: 4px;
+  }
+
+  .btn-icon {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+
+  .stage-overlay {
+    top: 6px;
+    left: 8px;
+  }
+
+  .chamber-title-card {
+    padding: 4px 8px;
+    max-width: 220px;
+  }
+
+  .chamber-name {
+    font-size: 0.8rem;
+  }
+
+  .chamber-objective {
+    font-size: 0.65rem;
+  }
+
+  canvas#physics-canvas {
+    max-height: calc(100dvh - 200px);
+    width: 100%;
+  }
+
+  .dock-container {
+    padding: 6px 10px;
+    gap: 4px;
+  }
+
+  .preset-chips-row {
+    gap: 6px;
+  }
+
+  .chip-btn {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+
+  .terminal-input-bar {
+    padding: 4px 8px;
+    gap: 6px;
+  }
+
+  .terminal-prompt-symbol {
+    font-size: 0.9rem;
+  }
+
+  .terminal-input {
+    font-size: 0.85rem;
+  }
+
+  .btn-execute {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+
+  .btn-execute span {
+    display: none;
+  }
+
+  .dock-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .mobile-touch-controls {
+    bottom: 6px;
+    right: 6px;
+    left: 6px;
+    justify-content: center;
+  }
+
+  .mobile-controls-wrapper {
+    width: 100%;
+    justify-content: space-around;
+    padding: 4px 6px;
+  }
+
+  .mobile-touch-btn {
+    padding: 6px 8px;
+    font-size: 0.65rem;
+    min-height: 36px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .btn-lbl {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-title {
+    font-size: 0.9rem;
+  }
+
+  .btn-icon {
+    font-size: 0.65rem;
+    padding: 3px 6px;
+  }
+
+  .btn-lbl {
+    display: none;
+  }
+}
+
