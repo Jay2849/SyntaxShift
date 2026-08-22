@@ -6,3 +6,5 @@ export function triggerChromaticPulse(containerId = 'stage-container') {
     el.classList.add('chromatic-pulse');
   }
 }
+
+ChromaticShader.pulseDurationMs = 400;
