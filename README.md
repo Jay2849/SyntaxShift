@@ -7,13 +7,13 @@
 [![Matter.js](https://img.shields.io/badge/Matter.js-2D_Physics-4BC51D?style=for-the-badge)](https://brm.io/matter-js/)
 [![Google Gemini API](https://img.shields.io/badge/Google_Gemini-API_v1.5_Flash-8E75B2?style=for-the-badge&logo=googlecloud&logoColor=white)](https://ai.google.dev/)
 [![Web Audio API](https://img.shields.io/badge/Web_Audio-Synthesizer_SFX-FF5722?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
-[![Status](https://img.shields.io/badge/Production-100%25_Ready-00F3FF?style=for-the-badge)](https://github.com/Jay2849/SyntaxShift)
+[![Commits](https://img.shields.io/badge/GitHub_Commits-148+_Pushed-00F3FF?style=for-the-badge)](https://github.com/Jay2849/SyntaxShift/commits/main)
 
 ---
 
 **SyntaxShift** is an open-ended 2D physics puzzle environment driven by Google Gemini API Natural Language Processing and Matter.js rigid-body dynamics. Players manipulate vector gravitational fields, entity buoyant forces, material elasticity, surface friction, and kinetic drag parameters using natural language directives to guide **Spark** through 5 hazardous chambers.
 
-[Architecture](#1-system-architecture) • [Physics Math](#2-mathematical--physical-foundation) • [NLP Schema](#3-natural-language-to-physics-compiler) • [Chambers](#4-puzzle-chambers-specification) • [Quick Start](#5-developer-getting-started)
+[Architecture](#1-system-architecture) • [Physics Math](#2-mathematical--physical-foundation) • [NLP Schema](#3-natural-language-to-physics-compiler) • [Prompt Playbook](#4-natural-language-prompt-playbook--solution-guide) • [Getting Started](#5-developer-getting-started)
 
 ---
 
@@ -72,7 +72,7 @@ Standard Cartesian coordinate space ($+X$ right, $+Y$ down):
 
 ### 2.2 Local vs. Global Gravitational Overrides
 1. **Global Environmental Gravity:**
-   Mutates `world.gravity.x` and `world.gravity.y` directly across all non-static bodies concurrently.
+   Mutates `engine.gravity.x` and `engine.gravity.y` directly across all non-static bodies concurrently.
 
 2. **Selective Entity Anti-Gravity (Isolated Buoyancy):**
    Global engine gravity remains unaffected: $\vec{g}_{\text{global}} = (0, +1.0)$.  
@@ -80,11 +80,6 @@ Standard Cartesian coordinate space ($+X$ right, $+Y$ down):
    $$\vec{F}_{\text{anti}} = -m_i \cdot \vec{g}_{\text{global}} + \vec{F}_{\text{desired}}$$
    - $\vec{F}_{\text{desired}} = \vec{0} \implies$ **Zero-G floating (Neutral buoyancy)**
    - $\vec{F}_{\text{desired}} = (0, -m_i |g|) \implies$ **Inverted $-1g$ upward flight**
-
-### 2.3 Terminal Velocity & Air Drag Damping
-Anti-gravity without kinetic friction results in unbounded acceleration:
-- **Velocity Clamping:** $v_y = \text{sign}(v_y) \cdot \min(|v_y|, v_{\text{max}})$, where $v_{\text{max}} = 15.0 \text{ px/tick}$.
-- **Air Resistance Damping:** $\vec{F}_{\text{drag}} \approx -k_{\text{air}} \vec{v}$, configured via `body.frictionAir = 0.04 - 0.05`.
 
 ---
 
@@ -113,24 +108,39 @@ Anti-gravity without kinetic friction results in unbounded acceleration:
 }
 ```
 
-### 3.2 Offline Sub-10ms Fallback Engine
-When no Gemini API key is configured or network latency exceeds 350ms, SyntaxShift automatically falls back to its keyword matrix parser:
-- `"Invert gravity upside down"` $\rightarrow$ Global inverted $-1G$ vector.
-- `"Zero gravity float mode"` $\rightarrow$ Neutral buoyancy mode.
-- `"Lift only red blocks upward"` $\rightarrow$ Isolated red block flotation.
-- `"Make Spark super bouncy"` $\rightarrow$ Restitution set to $0.92$.
-
 ---
 
-## 4. PUZZLE CHAMBERS SPECIFICATION
+## 4. NATURAL LANGUAGE PROMPT PLAYBOOK & SOLUTION GUIDE
 
-| Chamber | Title | Objective | Intended Directives |
+> [!IMPORTANT]
+> **Can every level be solved 100% using natural language prompts alone?**  
+> **YES!** Every chamber in SyntaxShift is designed to be fully solvable purely by typing natural language prompts into the terminal or using the 1-click controls!
+
+### 4.1 Master Solution Prompt Directives
+
+| Chamber | Title | Primary Solution Prompt | Alternative Prompts |
 | :--- | :--- | :--- | :--- |
-| **01** | **The Inversion Tutorial** | Lift Spark past lower ground barrier into ceiling extraction portal. | *"Invert gravity upside down"* |
-| **02** | **Selective Mass Separation** | Lift heavy red blocks into ceiling laser grid to free trapped Spark. | *"Lift only red blocks upward"* |
-| **03** | **The Gravitational Chasm** | Glide horizontally across spike pit avoiding ceiling mines. | *"Zero gravity float with right drift"* |
-| **04** | **Kinetic Pendulum Inversion** | Build momentum on U-ramp, flip gravity at apex to reach upper ledge. | *"Invert gravity at apex"* |
-| **05** | **Anti-Gravity Laser Labyrinth** | Navigate moving vertical laser gates using bounce & buoyancy. | *"Super bouncy Spark with zero friction"* |
+| **01** | **The Inversion Tutorial** | `"Invert gravity upside down"` | *"Reverse gravity upward"*, *"Make gravity -1G"* |
+| **02** | **Selective Mass Separation** | `"Lift only red blocks upward"` | *"Invert gravity for red blocks"*, *"Float red hazard barrier"* |
+| **03** | **The Gravitational Chasm** | `"Float in zero gravity"` + `"Push top right"` | *"Zero gravity float mode"*, *"Push Spark east"* |
+| **04** | **Kinetic Pendulum Inversion** | `"Invert gravity for blue blocks"` | *"Lift platform platform upward"*, *"Push Spark right"* |
+| **05** | **Anti-Gravity Laser Labyrinth** | `"Create a black hole"` or `"Make Spark super bouncy"` | *"Oscillate red blocks"*, *"Float in space"* |
+
+### 4.2 Comprehensive Prompt Dictionary
+
+- **Global Inversion Directives**:
+  - `"Invert gravity upside down"` (Flips world gravity to $-1.0G$ upward)
+  - `"Reset to normal gravity"` (Restores $+1.0G$ downward)
+- **Selective Entity Directives**:
+  - `"Lift only red hazard blocks into the ceiling"` (Applies selective buoyancy to `RED_BLOCKS`)
+  - `"Float Spark in zero gravity"` (Applies neutral buoyancy to `SPARK`)
+  - `"Lift crates upward"` (Applies selective buoyancy to `CRATES`)
+- **Directional Physics Vectors**:
+  - `"Push Spark to the right"` (Applies horizontal vector force $+1.5X$)
+  - `"Launch top-right corner"` (Applies vector force $+1.0X, -1.0Y$)
+- **Material Attribute Mutations**:
+  - `"Make Spark super bouncy with zero friction"` (Sets `restitution: 0.95`, `friction: 0.001`)
+  - `"Increase Spark mass by 5x"` (Sets `massMultiplier: 5.0`)
 
 ---
 
@@ -156,11 +166,6 @@ npm run dev
 
 Open `http://localhost:3000` in your browser.
 
-### Production Build
-```bash
-npm run build
-```
-
 ---
 
 ## 6. PROJECT DIRECTORY STRUCTURE
@@ -175,24 +180,20 @@ SyntaxShift/
 │   ├── physics/                  # Matter.js world & AntiGravity engine modules
 │   │   ├── AntiGravityEngine.js
 │   │   ├── PhysicsWorld.js
-│   │   ├── VectorMath.js
-│   │   ├── VelocityClamp.js
-│   │   ├── AirDrag.js
-│   │   ├── ForceUtils.js
-│   │   └── MassUtils.js
+│   │   ├── BlackHoleEngine.js
+│   │   └── GravityGunBeam.js
 │   ├── ai/                       # LLM compiler & offline matchers
 │   │   ├── GeminiCompiler.js
-│   │   ├── DeterministicFallbackParser.js
-│   │   └── matchers/
+│   │   └── DeterministicFallbackParser.js
 │   ├── levels/                   # 5 dedicated puzzle chambers & level manager
 │   │   ├── LevelManager.js
 │   │   └── chambers/
 │   ├── audio/                    # Web Audio API sound synthesizers
-│   │   ├── SoundEngine.js
-│   │   └── synths/
+│   │   └── SoundEngine.js
 │   └── ui/                       # Terminal UI & visual shaders
 │       ├── TerminalUI.js
 │       ├── VisualJuice.js
+│       ├── CameraShakeController.js
 │       └── renderers/
 └── tests/                        # Automated unit test suite
 ```
