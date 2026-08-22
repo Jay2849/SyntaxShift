@@ -7,3 +7,4 @@ export function matchTargetEntity(query) {
 }
 
 export function isGlobalTarget(target) { return target === "GLOBAL"; }
+/** TargetMatcher unit version 1.0 */
