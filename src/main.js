@@ -6,7 +6,7 @@ import { SoundEngine } from './audio/SoundEngine.js';
 import { VisualJuice } from './ui/VisualJuice.js';
 import { TerminalUI } from './ui/TerminalUI.js';
 
-// Import New Tadakta-Bhadakta Modules
+// Import Tadakta-Bhadakta Modules
 import { SparkTrailRenderer } from './ui/renderers/SparkTrailRenderer.js';
 import { SupernovaExplosionRenderer } from './ui/renderers/SupernovaExplosionRenderer.js';
 import { MatrixStreamRenderer } from './ui/renderers/MatrixStreamRenderer.js';
@@ -15,6 +15,8 @@ import { GravityGunBeam } from './physics/GravityGunBeam.js';
 import { renderGravityBeam } from './ui/renderers/GravityBeamRenderer.js';
 import { ChamberAssists } from './levels/ChamberAssists.js';
 import { playSupernovaExplosion } from './audio/synths/SupernovaExplosionSynth.js';
+import { VictoryModalController } from './ui/components/VictoryModalController.js';
+import { ScoringEngine } from './levels/ScoringEngine.js';
 
 /**
  * SYNTAXSHIFT MAIN APPLICATION ENTRY POINT
@@ -34,7 +36,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const soundEngine = new SoundEngine();
   const visualJuice = new VisualJuice(physicsWorld.ctx, width, height);
 
-  // Initialize FX & Interactivity
+  // FX & Interactivity
   const sparkTrail = new SparkTrailRenderer();
   const supernovaExplosion = new SupernovaExplosionRenderer();
   const matrixStream = new MatrixStreamRenderer(width, height);
@@ -61,18 +63,23 @@ window.addEventListener('DOMContentLoaded', () => {
     ui.updateHUD(hudState);
   };
 
-  levelManager.onWin = (chamber) => {
+  levelManager.onWin = (chamber, timeSec, promptsUsed) => {
     ui.triggerWinEffect();
+
     if (physicsWorld.entities.spark) {
       const { x, y } = physicsWorld.entities.spark.position;
       supernovaExplosion.trigger(x, y);
       playSupernovaExplosion(soundEngine.ctx);
     }
-    visualJuice.showBannerNotification(`🎉 EXTRACTION PORTAL REACHED! CHAMBER CLEAR!`, "success", 3000);
-    ui.setMessage(`🎉 Extraction Portal Reached! Chamber ${chamber.number} Cleared!`, "success");
+
+    const rank = ScoringEngine.calculateRank(parseFloat(timeSec), promptsUsed);
+    VictoryModalController.show(chamber.name, timeSec, promptsUsed, rank);
+    visualJuice.showBannerNotification(`🎉 EXTRACTION PORTAL REACHED! [${rank}]`, "success", 3000);
+    ui.setMessage(`🎉 Extraction Portal Reached! Chamber ${chamber.number} Cleared! (${rank})`, "success");
+
     setTimeout(() => {
       levelManager.nextChamber();
-    }, 2400);
+    }, 2800);
   };
 
   levelManager.onDeath = (hazardType) => {

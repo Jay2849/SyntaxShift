@@ -8,8 +8,9 @@ export class LevelManager {
   constructor(physicsWorld) {
     this.physicsWorld = physicsWorld;
     this.currentLevelIndex = 0;
-    this.remainingEnergy = 3;
+    this.remainingEnergy = 5;
     this.isLevelActive = false;
+    this.levelStartTime = Date.now();
 
     // Callbacks
     this.onStateChange = null;
@@ -32,8 +33,9 @@ export class LevelManager {
     this.currentLevelIndex = index;
     const config = this.getCurrentChamber();
 
-    this.remainingEnergy = config.energyCharges;
+    this.remainingEnergy = 5; // Give 5 energy charges per level for super easy playability!
     this.isLevelActive = true;
+    this.levelStartTime = Date.now();
 
     // Reset physics world and rebuild entities
     this.physicsWorld.clearWorld();
@@ -52,7 +54,6 @@ export class LevelManager {
     if (this.currentLevelIndex < CHAMBER_CONFIGS.length - 1) {
       this.loadChamber(this.currentLevelIndex + 1);
     } else {
-      // Loop back to level 0 or celebration
       this.loadChamber(0);
     }
   }
@@ -71,8 +72,13 @@ export class LevelManager {
   handleWin() {
     if (!this.isLevelActive) return;
     this.isLevelActive = false;
+
+    const elapsedTimeSec = ((Date.now() - this.levelStartTime) / 1000).toFixed(2);
+    const config = this.getCurrentChamber();
+    const promptsUsed = 5 - this.remainingEnergy;
+
     if (this.onWin) {
-      this.onWin(this.getCurrentChamber());
+      this.onWin(config, elapsedTimeSec, Math.max(1, promptsUsed));
     }
   }
 
@@ -93,7 +99,7 @@ export class LevelManager {
       levelIndex: this.currentLevelIndex,
       totalLevels: CHAMBER_CONFIGS.length,
       remainingEnergy: this.remainingEnergy,
-      maxEnergy: chamber.energyCharges,
+      maxEnergy: 5,
       gravityVector: this.physicsWorld.antiGravityEngine.currentGravityVector,
       isGlobalInverted: this.physicsWorld.antiGravityEngine.isGlobalInverted
     };
