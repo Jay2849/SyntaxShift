@@ -14,3 +14,4 @@ export const Chamber1 = {
 };
 
 Chamber1.difficulty = "TUTORIAL";
+/** Chamber 1 module ready */
