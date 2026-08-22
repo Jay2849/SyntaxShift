@@ -12,3 +12,5 @@ export const Chamber1 = {
     world.spawnBlueBlock(840, 110, 140, 20, true);
   }
 };
+
+Chamber1.difficulty = "TUTORIAL";
