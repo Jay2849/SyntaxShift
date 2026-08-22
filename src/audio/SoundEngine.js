@@ -20,6 +20,23 @@ export class SoundEngine {
     }
   }
 
+  attachTouchUnlockListener() {
+    const unlock = () => {
+      this.init();
+      if (this.ctx && this.ctx.state === 'running') {
+        window.removeEventListener('touchstart', unlock);
+        window.removeEventListener('touchend', unlock);
+        window.removeEventListener('pointerdown', unlock);
+        window.removeEventListener('click', unlock);
+      }
+    };
+    window.addEventListener('touchstart', unlock, { passive: true });
+    window.addEventListener('touchend', unlock, { passive: true });
+    window.addEventListener('pointerdown', unlock, { passive: true });
+    window.addEventListener('click', unlock, { passive: true });
+  }
+
+
   /**
    * Sub-bass drop (60Hz -> 20Hz) on gravity shift
    */
