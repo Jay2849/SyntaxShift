@@ -6,6 +6,16 @@ import { SoundEngine } from './audio/SoundEngine.js';
 import { VisualJuice } from './ui/VisualJuice.js';
 import { TerminalUI } from './ui/TerminalUI.js';
 
+// Import New Tadakta-Bhadakta Modules
+import { SparkTrailRenderer } from './ui/renderers/SparkTrailRenderer.js';
+import { SupernovaExplosionRenderer } from './ui/renderers/SupernovaExplosionRenderer.js';
+import { MatrixStreamRenderer } from './ui/renderers/MatrixStreamRenderer.js';
+import { MouseInputHandler } from './ui/components/MouseInputHandler.js';
+import { GravityGunBeam } from './physics/GravityGunBeam.js';
+import { renderGravityBeam } from './ui/renderers/GravityBeamRenderer.js';
+import { ChamberAssists } from './levels/ChamberAssists.js';
+import { playSupernovaExplosion } from './audio/synths/SupernovaExplosionSynth.js';
+
 /**
  * SYNTAXSHIFT MAIN APPLICATION ENTRY POINT
  */
@@ -24,6 +34,12 @@ window.addEventListener('DOMContentLoaded', () => {
   const soundEngine = new SoundEngine();
   const visualJuice = new VisualJuice(physicsWorld.ctx, width, height);
 
+  // Initialize FX & Interactivity
+  const sparkTrail = new SparkTrailRenderer();
+  const supernovaExplosion = new SupernovaExplosionRenderer();
+  const matrixStream = new MatrixStreamRenderer(width, height);
+  const mouseInput = new MouseInputHandler(canvas);
+
   // 2. Initialize UI Controller
   const ui = new TerminalUI({
     geminiCompiler,
@@ -31,11 +47,9 @@ window.addEventListener('DOMContentLoaded', () => {
     soundEngine,
     visualJuice,
     onExecutePrompt: (payload) => {
-      // Execute JSON physics payload directly on AntiGravityEngine
       const result = physicsWorld.antiGravityEngine.executeAiPayload(payload, physicsWorld.entities);
       ui.updateHUD(levelManager.getHUDState());
 
-      // Show large center stage banner notification
       if (payload.hudMessage) {
         visualJuice.showBannerNotification(payload.hudMessage, "info", 2500);
       }
@@ -49,6 +63,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
   levelManager.onWin = (chamber) => {
     ui.triggerWinEffect();
+    if (physicsWorld.entities.spark) {
+      const { x, y } = physicsWorld.entities.spark.position;
+      supernovaExplosion.trigger(x, y);
+      playSupernovaExplosion(soundEngine.ctx);
+    }
     visualJuice.showBannerNotification(`🎉 EXTRACTION PORTAL REACHED! CHAMBER CLEAR!`, "success", 3000);
     ui.setMessage(`🎉 Extraction Portal Reached! Chamber ${chamber.number} Cleared!`, "success");
     setTimeout(() => {
@@ -68,38 +87,56 @@ window.addEventListener('DOMContentLoaded', () => {
   // 4. Load initial chamber
   levelManager.loadChamber(0);
 
-  // 5. Unstoppable Main Game Animation Loop (60 FPS)
+  // 5. Main Animation Loop (60 FPS)
   function renderLoop() {
-    // Schedule next frame FIRST to guarantee loop never freezes
     requestAnimationFrame(renderLoop);
 
     try {
-      // Step Matter.js physics engine with fixed 60 FPS delta
+      // Step Physics
       physicsWorld.update(16.666);
+
+      // Interactive Mouse Gravity Beam Drag
+      if (mouseInput.isMouseDown && physicsWorld.entities.spark) {
+        GravityGunBeam.applyMouseAttraction(physicsWorld.entities.spark, mouseInput.mouseX, mouseInput.mouseY, 0.003);
+      }
 
       const isInv = physicsWorld.antiGravityEngine.isGlobalInverted;
       const gVec = physicsWorld.antiGravityEngine.currentGravityVector;
 
-      // 1. Draw High-Clarity Stage Background & Vector Grid
+      // 1. Background Grid & Hacker Matrix Code Stream
       visualJuice.drawStageBackground(isInv, gVec);
+      matrixStream.render(physicsWorld.ctx);
 
-      // 2. Draw Rigid Bodies (Barrier Walls, Blue Platforms, Crates)
+      // 2. Trajectory Prediction Guide Line (For Easy Playability)
+      if (physicsWorld.entities.spark) {
+        const { x, y } = physicsWorld.entities.spark.position;
+        ChamberAssists.renderTrajectoryGuide(physicsWorld.ctx, x, y, gVec);
+        sparkTrail.update(x, y);
+        sparkTrail.render(physicsWorld.ctx);
+      }
+
+      // 3. Draw Interactive Mouse Laser Tether
+      if (physicsWorld.entities.spark) {
+        const { x, y } = physicsWorld.entities.spark.position;
+        renderGravityBeam(physicsWorld.ctx, x, y, mouseInput.mouseX, mouseInput.mouseY, mouseInput.isMouseDown);
+      }
+
+      // 4. Draw Rigid Bodies & Hazards
       const bodies = Matter.Composite.allBodies(physicsWorld.world);
       visualJuice.drawBodies(bodies);
-
-      // 3. Draw Hazard Lasers & Spikes
       visualJuice.drawHazards(physicsWorld.entities.lasers, physicsWorld.entities.spikes);
 
-      // 4. Draw Goal Portal Vortex with Target Label
+      // 5. Draw Goal Portal Vortex
       visualJuice.drawPortal(physicsWorld.entities.portal);
 
-      // 5. Draw Spark Protagonist with Velocity Vector
+      // 6. Draw Spark Protagonist
       visualJuice.drawSpark(physicsWorld.entities.spark);
 
-      // 6. Draw Selective Anti-Gravity Force Vector Badges
+      // 7. Draw Supernova Explosions & Force Badges
+      supernovaExplosion.render(physicsWorld.ctx);
       visualJuice.drawEntityVectorBadges(physicsWorld.antiGravityEngine.activeEntityModifiers);
 
-      // 7. Draw Large Stage Banner Notification
+      // 8. Stage Banner Notification
       visualJuice.drawBannerNotification();
 
     } catch (err) {
@@ -107,6 +144,5 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Start continuous loop
   requestAnimationFrame(renderLoop);
 });

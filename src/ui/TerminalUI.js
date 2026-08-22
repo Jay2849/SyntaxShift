@@ -57,6 +57,12 @@ export class TerminalUI {
       await this.handlePromptExecution(text);
     });
 
+    // 1b. Quick 1-Click Gravity Flip Button
+    document.getElementById('btn-quick-flip')?.addEventListener('click', async () => {
+      this.soundEngine.playKeystroke();
+      await this.handlePromptExecution("Invert gravity upside down");
+    });
+
     // Keystroke SFX
     this.terminalInput.addEventListener('keydown', () => {
       this.soundEngine.playKeystroke();
