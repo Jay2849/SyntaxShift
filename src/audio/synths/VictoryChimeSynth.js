@@ -15,3 +15,5 @@ export function playVictoryChime(ctx) {
     osc.stop(ctx.currentTime + idx * 0.08 + 0.3);
   });
 }
+
+export function getVictoryNotes() { return [523.25, 659.25, 783.99, 1046.50]; }
