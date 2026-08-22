@@ -7,7 +7,8 @@ import { deterministicFallbackParser } from './DeterministicFallbackParser.js';
  */
 export class GeminiCompiler {
   constructor() {
-    this.apiKey = localStorage.getItem('syntaxshift_gemini_key') || '';
+    const envKey = typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.VITE_GEMINI_API_KEY : '';
+    this.apiKey = localStorage.getItem('syntaxshift_gemini_key') || envKey || '';
     this.modelName = 'gemini-1.5-flash';
     this.genAI = null;
 
