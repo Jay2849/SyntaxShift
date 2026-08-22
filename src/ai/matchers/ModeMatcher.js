@@ -7,3 +7,4 @@ export function matchAntigravityMode(query) {
 }
 
 export function isInvertedMode(mode) { return mode === "INVERT"; }
+/** ModeMatcher unit version 1.0 */
