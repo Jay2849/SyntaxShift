@@ -6,3 +6,4 @@ export function clampRestitution(value, min = 0.0, max = 0.95) {
 }
 
 export function isSuperBouncy(restitution) { return restitution > 0.85; }
+/** ElasticityMath unit version 1.0 */
