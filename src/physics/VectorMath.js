@@ -33,3 +33,5 @@ export function scaleVector(v, scale) {
 export function addVectors(v1, v2) {
   return { x: v1.x + v2.x, y: v1.y + v2.y };
 }
+
+export function vectorDistance(v1, v2) { return Math.hypot(v2.x - v1.x, v2.y - v1.y); }
