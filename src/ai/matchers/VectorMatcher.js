@@ -4,3 +4,5 @@ export function matchVectorDirection(query) {
   if (query.includes("zero") || query.includes("float")) return { x: 0, y: 0 };
   return { x: 0, y: -1.0 };
 }
+
+export function isZeroGVector(v) { return v.x === 0 && v.y === 0; }
