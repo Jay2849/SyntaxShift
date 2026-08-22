@@ -6,3 +6,4 @@ export function getSurfaceFriction(isIce = false) {
 }
 
 export function isIceSurface(friction) { return friction < 0.01; }
+/** FrictionMath unit version 1.0 */
