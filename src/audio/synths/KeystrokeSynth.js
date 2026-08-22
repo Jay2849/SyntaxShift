@@ -11,3 +11,5 @@ export function playKeystrokeSound(ctx) {
   osc.start();
   osc.stop(ctx.currentTime + 0.03);
 }
+
+export function getKeystrokeFreq() { return 800 + Math.random() * 200; }
