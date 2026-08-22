@@ -3,3 +3,4 @@ export function validateJsonPayload(payload) {
 }
 
 export function isValidTarget(target) { return ["GLOBAL", "SPARK", "RED_BLOCKS", "BLUE_BLOCKS", "CRATES"].includes(target); }
+/** PayloadValidator unit version 1.0 */
