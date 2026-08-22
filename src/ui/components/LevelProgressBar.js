@@ -2,13 +2,16 @@ export class LevelProgressBar {
   static render(containerId, currentIdx, total = 5) {
     const c = document.getElementById(containerId);
     if (!c) return;
-    let html = '<div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;">';
+
+    let html = '<div style="display:flex;align-items:center;gap:4px;">';
     for (let i = 0; i < total; i++) {
       const active = i === currentIdx;
       const done = i < currentIdx;
-      const color = active ? 'var(--neon-cyan)' : done ? 'var(--neon-green)' : 'var(--text-muted)';
-      html += `<span style="padding:2px 8px;border-radius:4px;border:1px solid ${color};color:${color};background:${active ? 'rgba(0,243,255,0.2)' : 'transparent'}">CH ${i+1}</span>`;
-      if (i < total - 1) html += '<span style="color:var(--text-muted);">&#8702;</span>';
+      const bg = active ? 'var(--neon-cyan)' : done ? 'var(--neon-green)' : 'rgba(255, 255, 255, 0.1)';
+      const color = active ? '#000' : done ? '#000' : 'var(--text-muted)';
+      const border = active ? 'var(--neon-cyan)' : done ? 'var(--neon-green)' : 'var(--border-dim)';
+
+      html += `<span style="font-family:var(--font-mono);font-weight:700;font-size:0.7rem;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:${bg};color:${color};border:1px solid ${border};box-shadow:${active ? '0 0 10px var(--neon-cyan-glow)' : 'none'};">${i + 1}</span>`;
     }
     html += '</div>';
     c.innerHTML = html;

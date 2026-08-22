@@ -75,59 +75,62 @@ body, html {
 
 /* Top HUD Bar */
 .hud-bar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 260px 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
+  padding: 0 20px;
   background: var(--bg-card);
-  border-bottom: 1fr solid var(--border-neon);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid var(--border-neon);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(12px);
   z-index: 10;
 }
 
 .brand-title {
   font-family: var(--font-display);
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   font-weight: 900;
   letter-spacing: 2px;
   color: var(--neon-cyan);
   text-shadow: 0 0 10px var(--neon-cyan-glow);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .brand-badge {
-  font-size: 0.65rem;
-  padding: 3px 8px;
+  font-size: 0.6rem;
+  padding: 2px 6px;
   background: rgba(0, 243, 255, 0.15);
   border: 1px solid var(--neon-cyan);
   border-radius: 4px;
   color: var(--neon-cyan);
+  letter-spacing: 1px;
 }
 
 .hud-stats {
   display: flex;
   align-items: center;
-  gap: 24px;
+  justify-content: center;
+  gap: 16px;
 }
 
 .stat-box {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-dim);
-  padding: 6px 14px;
+  padding: 4px 10px;
   border-radius: 6px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
 .stat-label {
   color: var(--text-muted);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .stat-value {
@@ -142,11 +145,12 @@ body, html {
 .stat-value.gravity-badge {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 2px 8px;
+  gap: 4px;
+  padding: 2px 6px;
   border-radius: 4px;
   background: rgba(0, 243, 255, 0.1);
   border: 1px solid var(--neon-cyan);
+  font-size: 0.75rem;
 }
 
 .stat-value.gravity-badge.inverted {
@@ -155,26 +159,26 @@ body, html {
   color: var(--neon-pink);
 }
 
-/* Level Selection Modal & Controls */
+/* Controls */
 .hud-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .btn-icon {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border-neon);
   color: var(--text-main);
-  padding: 8px 14px;
+  padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .btn-icon:hover {
@@ -189,7 +193,7 @@ body, html {
   box-shadow: 0 0 15px var(--neon-pink-glow);
 }
 
-/* Main Viewport & Simulation Stage */
+/* Stage & Overlay */
 .stage-container {
   position: relative;
   width: 100%;
@@ -211,43 +215,45 @@ canvas#physics-canvas {
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 243, 255, 0.1);
 }
 
-/* Overlay Visual Juices */
 .stage-overlay {
   position: absolute;
-  top: 16px;
-  left: 20px;
+  top: 12px;
+  left: 16px;
   pointer-events: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  z-index: 5;
 }
 
 .chamber-title-card {
-  background: rgba(10, 14, 23, 0.85);
-  border-left: 4px solid var(--neon-cyan);
-  padding: 10px 16px;
+  background: rgba(6, 9, 16, 0.88);
+  border-left: 3px solid var(--neon-cyan);
+  padding: 6px 12px;
   backdrop-filter: blur(8px);
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 6px 6px 0;
+  max-width: 320px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .chamber-number {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: var(--neon-cyan);
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   text-transform: uppercase;
+  font-weight: 700;
 }
 
 .chamber-name {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--text-bright);
+  line-height: 1.2;
 }
 
 .chamber-objective {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
-  margin-top: 4px;
+  margin-top: 2px;
+  line-height: 1.3;
 }
 
 /* Terminal & Dock Controls */

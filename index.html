@@ -13,37 +13,35 @@
   <div id="app">
     <!-- Top HUD Bar -->
     <header class="hud-bar">
+      <!-- Left Brand Section -->
       <div class="brand-title">
         SYNTAX<span style="color: var(--neon-pink)">SHIFT</span>
-        <span class="brand-badge">ANTI-GRAVITY ENGINE</span>
+        <span class="brand-badge">V1.5 AI ENGINE</span>
       </div>
 
+      <!-- Center Progress & Stats Section -->
       <div class="hud-stats">
-        <div id="level-progress-container" style="margin-right: 12px;"></div>
-
-        <div class="stat-box">
-          <span class="stat-label">Chamber</span>
-          <span class="stat-value" id="hud-level-num">1 / 5</span>
-        </div>
+        <div id="level-progress-container"></div>
 
         <div class="stat-box">
           <span class="stat-label">Energy</span>
-          <span class="stat-value energy" id="hud-energy-charges">⚡ 3 / 3</span>
+          <span class="stat-value energy" id="hud-energy-charges">⚡ 5 / 5</span>
         </div>
 
         <div class="stat-box">
-          <span class="stat-label">Vector Gravity</span>
+          <span class="stat-label">Gravity</span>
           <span class="stat-value gravity-badge" id="hud-gravity-state">
             <span id="grav-icon">⬇️</span> <span id="grav-text">(0.0, +1.0)</span>
           </span>
         </div>
       </div>
 
+      <!-- Right Control Actions -->
       <div class="hud-actions">
-        <button class="btn-icon" id="btn-toggle-logs">📟 Telemetry</button>
-        <button class="btn-icon" id="btn-open-levels">🎮 Chambers</button>
-        <button class="btn-icon" id="btn-api-key">🔑 AI Key</button>
-        <button class="btn-icon danger" id="btn-reset-chamber">🔄 Reset</button>
+        <button class="btn-icon" id="btn-toggle-logs" title="Toggle Hacker Telemetry Logs">📟 Logs</button>
+        <button class="btn-icon" id="btn-open-levels" title="Select Chamber">🎮 Levels</button>
+        <button class="btn-icon" id="btn-api-key" title="Configure Gemini Key">🔑 AI Key</button>
+        <button class="btn-icon danger" id="btn-reset-chamber" title="Reset Current Chamber">🔄 Reset</button>
       </div>
     </header>
 
@@ -51,10 +49,12 @@
     <main class="stage-container" id="stage-container">
       <canvas id="physics-canvas"></canvas>
 
-      <!-- Chamber Metadata Overlay -->
+      <!-- Compact Chamber Metadata Overlay -->
       <div class="stage-overlay">
         <div class="chamber-title-card">
-          <div class="chamber-number" id="card-chamber-num">CHAMBER 01</div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="chamber-number" id="card-chamber-num">CHAMBER 01</span>
+          </div>
           <div class="chamber-name" id="card-chamber-name">The Inversion Tutorial</div>
           <div class="chamber-objective" id="card-chamber-objective">Guide Spark to ceiling portal by inverting gravity.</div>
         </div>
