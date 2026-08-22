@@ -5,3 +5,5 @@ export function matchAntigravityMode(query) {
   if (query.includes("right") || query.includes("left")) return "LOCAL_FIELD";
   return "INVERT";
 }
+
+export function isInvertedMode(mode) { return mode === "INVERT"; }
