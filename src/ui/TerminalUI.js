@@ -77,6 +77,7 @@ export class TerminalUI {
         if (btn && btn.dataset.prompt) {
           this.terminalInput.value = btn.dataset.prompt;
           this.soundEngine.playKeystroke();
+          this.handlePromptExecution(btn.dataset.prompt);
         }
       });
     }
