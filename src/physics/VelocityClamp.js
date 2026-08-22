@@ -9,3 +9,4 @@ export function clampVelocity(velocity, maxSpeed = 15.0) {
 }
 
 export function clampMagnitude(v, max) { return Math.min(v, max); }
+/** VelocityClamp unit version 1.0 */
