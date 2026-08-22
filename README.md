@@ -7,13 +7,14 @@
 [![Matter.js](https://img.shields.io/badge/Matter.js-2D_Physics-4BC51D?style=for-the-badge)](https://brm.io/matter-js/)
 [![Google Gemini API](https://img.shields.io/badge/Google_Gemini-API_v1.5_Flash-8E75B2?style=for-the-badge&logo=googlecloud&logoColor=white)](https://ai.google.dev/)
 [![Web Audio API](https://img.shields.io/badge/Web_Audio-Synthesizer_SFX-FF5722?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
-[![Commits](https://img.shields.io/badge/GitHub_Commits-148+_Pushed-00F3FF?style=for-the-badge)](https://github.com/Jay2849/SyntaxShift/commits/main)
+[![Commits](https://img.shields.io/badge/GitHub_Commits-151+_Pushed-00F3FF?style=for-the-badge)](https://github.com/Jay2849/SyntaxShift/commits/main)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 ---
 
-**SyntaxShift** is an open-ended 2D physics puzzle environment driven by Google Gemini API Natural Language Processing and Matter.js rigid-body dynamics. Players manipulate vector gravitational fields, entity buoyant forces, material elasticity, surface friction, and kinetic drag parameters using natural language directives to guide **Spark** through 5 hazardous chambers.
+**SyntaxShift** is an open-ended 2D physics puzzle sandbox driven by Google Gemini API Natural Language Processing (LLM) and Matter.js rigid-body dynamics. Players manipulate vector gravitational fields, entity buoyant forces, material elasticity, surface friction, and kinetic drag parameters using natural language directives to guide **Spark** through 5 hazardous puzzle chambers.
 
-[Architecture](#1-system-architecture) • [Physics Math](#2-mathematical--physical-foundation) • [NLP Schema](#3-natural-language-to-physics-compiler) • [Prompt Playbook](#4-natural-language-prompt-playbook--solution-guide) • [Getting Started](#5-developer-getting-started)
+[Architecture](#1-system-architecture) • [Physics Math](#2-mathematical--physical-foundation) • [NLP Compiler](#3-natural-language-to-physics-compiler) • [Prompt Playbook](#4-master-natural-language-prompt-playbook--solutions) • [Chambers](#5-puzzle-chambers-specification) • [Getting Started](#6-developer-getting-started)
 
 ---
 
@@ -21,7 +22,7 @@
 
 ## 1. SYSTEM ARCHITECTURE
 
-SyntaxShift decouples prompt parsing from physics execution through a deterministic fallback pipeline and strict JSON contracts.
+SyntaxShift decouples natural language prompt parsing from physics execution through a deterministic fallback pipeline and strict JSON contracts.
 
 ```
                   +-----------------------------------+
@@ -46,12 +47,12 @@ SyntaxShift decouples prompt parsing from physics execution through a determinis
                   +-----------------------------------+
 ```
 
-### Tech Stack Specifications
-- **Core Engine & Bundler**: Vite (ES Modules) + HTML5 Canvas
-- **2D Physics Engine**: Matter.js (Rigid-body collisions, constraints, forces)
-- **AI NLP Pipeline**: `@google/generative-ai` (Gemini 1.5 Flash) + `DeterministicFallbackParser` (Zero-latency offline engine)
-- **Audio Synthesizer**: Procedural Web Audio API Sound Engine (0 asset downloads)
-- **Styling System**: Cyberpunk Neon Dark CSS (`#0a0b10` base, `#00f3ff` cyan, `#ff0055` pink accents, CRT scanlines)
+### Core Tech Stack
+- **Core Framework & Bundler**: Vite (ES Modules) + HTML5 Canvas
+- **2D Physics Engine**: Matter.js (Rigid-body dynamics, collisions, sensor bodies, forces)
+- **AI NLP Pipeline**: `@google/generative-ai` (Gemini 1.5 Flash) + `DeterministicFallbackParser` (Sub-10ms offline keyword matrix engine)
+- **Audio Synthesizer**: Web Audio API Procedural Synthesizer Engine (0 asset downloads)
+- **Styling & UI**: Cyberpunk Neon Dark CSS System (`#06080e` void, `#00f3ff` cyan, `#ff0055` pink accents, CRT scanlines, 100% zoom responsive grid)
 
 ---
 
@@ -81,6 +82,10 @@ Standard Cartesian coordinate space ($+X$ right, $+Y$ down):
    - $\vec{F}_{\text{desired}} = \vec{0} \implies$ **Zero-G floating (Neutral buoyancy)**
    - $\vec{F}_{\text{desired}} = (0, -m_i |g|) \implies$ **Inverted $-1g$ upward flight**
 
+### 2.3 Terminal Velocity & Air Drag Damping
+- **Velocity Clamping:** $v_y = \text{sign}(v_y) \cdot \min(|v_y|, v_{\text{max}})$, where $v_{\text{max}} = 15.0 \text{ px/tick}$.
+- **Air Resistance Damping:** $\vec{F}_{\text{drag}} \approx -k_{\text{air}} \vec{v}$, configured via `body.frictionAir = 0.04 - 0.05`.
+
 ---
 
 ## 3. NATURAL LANGUAGE TO PHYSICS COMPILER
@@ -108,49 +113,71 @@ Standard Cartesian coordinate space ($+X$ right, $+Y$ down):
 }
 ```
 
+### 3.2 Dual AI Parser Engine
+- **Primary LLM Mode**: Google Gemini 1.5 Flash parses raw natural language into strict structured JSON physics contracts.
+- **Offline Sub-10ms Fallback**: If no API key is provided or network latency occurs, SyntaxShift automatically routes prompts through its built-in `DeterministicFallbackParser` keyword matrix, guaranteeing 100% offline playability.
+
 ---
 
-## 4. NATURAL LANGUAGE PROMPT PLAYBOOK & SOLUTION GUIDE
+## 4. MASTER NATURAL LANGUAGE PROMPT PLAYBOOK & SOLUTIONS
 
 > [!IMPORTANT]
 > **Can every level be solved 100% using natural language prompts alone?**  
-> **YES!** Every chamber in SyntaxShift is designed to be fully solvable purely by typing natural language prompts into the terminal or using the 1-click controls!
+> **YES!** Every chamber in SyntaxShift is designed to be fully solvable purely by typing natural language prompts into the terminal or selecting preset chips!
 
-### 4.1 Master Solution Prompt Directives
+### 4.1 Chamber Solution Directives
 
-| Chamber | Title | Primary Solution Prompt | Alternative Prompts |
+| Chamber | Title | Primary Solution Prompt | Alternative Directive Prompts |
 | :--- | :--- | :--- | :--- |
 | **01** | **The Inversion Tutorial** | `"Invert gravity upside down"` | *"Reverse gravity upward"*, *"Make gravity -1G"* |
 | **02** | **Selective Mass Separation** | `"Lift only red blocks upward"` | *"Invert gravity for red blocks"*, *"Float red hazard barrier"* |
-| **03** | **The Gravitational Chasm** | `"Float in zero gravity"` + `"Push top right"` | *"Zero gravity float mode"*, *"Push Spark east"* |
-| **04** | **Kinetic Pendulum Inversion** | `"Invert gravity for blue blocks"` | *"Lift platform platform upward"*, *"Push Spark right"* |
-| **05** | **Anti-Gravity Laser Labyrinth** | `"Create a black hole"` or `"Make Spark super bouncy"` | *"Oscillate red blocks"*, *"Float in space"* |
+| **03** | **The Gravitational Chasm** | `"Float Spark in zero gravity"` $\rightarrow$ `"Push Spark top right corner"` | *"Zero gravity float mode"*, *"Push Spark east"* |
+| **04** | **Kinetic Pendulum Inversion** | `"Invert gravity for blue blocks"` | *"Lift platform upward"*, *"Push Spark to the right"* |
+| **05** | **Anti-Gravity Laser Labyrinth** | `"Create a black hole at center"` OR `"Make Spark super bouncy with zero friction"` | *"Oscillate red blocks in zero gravity"*, *"Float in space"* |
 
 ### 4.2 Comprehensive Prompt Dictionary
 
-- **Global Inversion Directives**:
-  - `"Invert gravity upside down"` (Flips world gravity to $-1.0G$ upward)
-  - `"Reset to normal gravity"` (Restores $+1.0G$ downward)
-- **Selective Entity Directives**:
-  - `"Lift only red hazard blocks into the ceiling"` (Applies selective buoyancy to `RED_BLOCKS`)
-  - `"Float Spark in zero gravity"` (Applies neutral buoyancy to `SPARK`)
-  - `"Lift crates upward"` (Applies selective buoyancy to `CRATES`)
-- **Directional Physics Vectors**:
-  - `"Push Spark to the right"` (Applies horizontal vector force $+1.5X$)
-  - `"Launch top-right corner"` (Applies vector force $+1.0X, -1.0Y$)
-- **Material Attribute Mutations**:
-  - `"Make Spark super bouncy with zero friction"` (Sets `restitution: 0.95`, `friction: 0.001`)
-  - `"Increase Spark mass by 5x"` (Sets `massMultiplier: 5.0`)
+#### Global Environmental Directives
+- `"Invert gravity upside down"` (Flips world gravity to $-1.0G$ upward)
+- `"Reset to normal gravity"` (Restores $+1.0G$ downward)
+- `"Zero gravity float mode"` (Sets global gravity to $0.0G$)
+
+#### Selective Entity Directives
+- `"Lift only red hazard blocks into the ceiling"` (Applies selective buoyancy to `RED_BLOCKS`)
+- `"Float Spark in zero gravity"` (Applies neutral buoyancy to `SPARK`)
+- `"Invert gravity for blue blocks"` (Applies selective buoyancy to `BLUE_BLOCKS`)
+- `"Lift crates upward"` (Applies selective buoyancy to `CRATES`)
+
+#### Directional Physics Vectors
+- `"Push Spark to the right"` (Applies horizontal vector force $+1.5X$)
+- `"Push Spark top right corner"` (Applies diagonal vector force $+1.0X, -1.0Y$)
+- `"Create a black hole at center"` (Spawns purple gravitational singularity field)
+
+#### Material Property Mutations
+- `"Make Spark super bouncy with zero friction"` (Sets `restitution: 0.95`, `friction: 0.001`)
+- `"Increase Spark mass by 5x"` (Sets `massMultiplier: 5.0`)
 
 ---
 
-## 5. DEVELOPER GETTING STARTED
+## 5. PUZZLE CHAMBERS SPECIFICATION
+
+| Chamber | Title | Objective | Key Hazards | Goal Target |
+| :--- | :--- | :--- | :--- | :--- |
+| **01** | **The Inversion Tutorial** | Lift Spark past ground barrier into ceiling portal. | Ground barrier | $(820, 50)$ |
+| **02** | **Selective Mass Separation** | Lift heavy red blocks into ceiling laser grid to free Spark. | Red barrier & laser | $(820, 480)$ |
+| **03** | **The Gravitational Chasm** | Glide horizontally across spike pit avoiding ceiling hazards. | Spike pit & mines | $(850, 270)$ |
+| **04** | **Kinetic Pendulum Inversion** | Build momentum on U-ramp, flip gravity at apex. | Pendulum swing | $(820, 80)$ |
+| **05** | **Anti-Gravity Laser Labyrinth** | Navigate moving vertical laser gates using bounce & buoyancy. | Moving laser gates | $(850, 450)$ |
+
+---
+
+## 6. DEVELOPER GETTING STARTED
 
 ### Prerequisites
 - Node.js (v18+)
 - Git
 
-### Installation & Execution
+### Quick Setup
 
 ```bash
 # 1. Clone the repository
@@ -166,9 +193,14 @@ npm run dev
 
 Open `http://localhost:3000` in your browser.
 
+### Production Build
+```bash
+npm run build
+```
+
 ---
 
-## 6. PROJECT DIRECTORY STRUCTURE
+## 7. PROJECT DIRECTORY STRUCTURE
 
 ```
 SyntaxShift/
