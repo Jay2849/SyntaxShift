@@ -201,13 +201,24 @@ export class AntiGravityEngine {
 
     if (target === 'GLOBAL') {
       if (mode === 'INVERT') {
-        this.setGlobalGravity(vec.x || 0, vec.y || -1.0);
+        const vecX = vec.x !== 0 ? vec.x : 0.6; // Slight rightward drift to glide along ceiling towards portal
+        const vecY = vec.y !== undefined ? vec.y : -1.0;
+        this.setGlobalGravity(vecX, vecY);
       } else if (mode === 'ZERO_G') {
         this.setGlobalGravity(0, 0, 0);
       } else if (mode === 'LOCAL_FIELD' || mode === 'PULL_UP') {
         this.setGlobalGravity(vec.x || 0, vec.y || -1.0);
       }
-      
+
+      // INSTANT POP IMPULSE: Wake up all non-static bodies & apply upward initial velocity so they don't stick to the floor
+      const bodies = Matter.Composite.allBodies(this.world).filter(b => !b.isStatic);
+      bodies.forEach(body => {
+        if (body.isSleeping) Matter.Body.setSleeping(body, false);
+        const impulseY = mode === 'INVERT' ? -6.0 : mode === 'ZERO_G' ? -3.0 : -4.0;
+        const impulseX = mode === 'INVERT' ? 2.0 : (vec.x || 0) * 3.0;
+        Matter.Body.setVelocity(body, { x: impulseX, y: impulseY });
+      });
+
       // Auto-restore global gravity after duration timer
       if (durationMs < 60000) {
         setTimeout(() => {
@@ -216,7 +227,11 @@ export class AntiGravityEngine {
       }
     } 
     else if (target === 'SPARK' && entities.spark) {
-      this.applyEntityAntiGravity(entities.spark, mode, vec, multiplier, durationMs);
+      const spark = entities.spark;
+      if (spark.isSleeping) Matter.Body.setSleeping(spark, false);
+      const impulseY = mode === 'INVERT' ? -6.0 : -3.0;
+      Matter.Body.setVelocity(spark, { x: (vec.x || 0.8) * 3.0, y: impulseY });
+      this.applyEntityAntiGravity(spark, mode, vec, multiplier, durationMs);
     } 
     else if (target === 'RED_BLOCKS' && entities.redBlocks && entities.redBlocks.length > 0) {
       entities.redBlocks.forEach(block => {
