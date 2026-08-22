@@ -24,6 +24,7 @@ export class PhysicsWorld {
       gravity: { x: 0, y: 1.0, scale: 0.001 }
     });
     this.world = this.engine.world;
+    this.world.gravity = this.engine.gravity;
 
     // Create AntiGravity Engine Subsystem
     this.antiGravityEngine = new AntiGravityEngine(this.world, this.engine);

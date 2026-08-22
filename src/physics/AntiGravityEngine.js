@@ -29,9 +29,16 @@ export class AntiGravityEngine {
    * @param {number} scale Gravity scale factor (default 0.001)
    */
   setGlobalGravity(x, y, scale = 0.001) {
-    this.world.gravity.x = x;
-    this.world.gravity.y = y;
-    this.world.gravity.scale = scale;
+    if (this.engine.gravity) {
+      this.engine.gravity.x = x;
+      this.engine.gravity.y = y;
+      this.engine.gravity.scale = scale;
+    }
+    if (this.world.gravity) {
+      this.world.gravity.x = x;
+      this.world.gravity.y = y;
+      this.world.gravity.scale = scale;
+    }
     
     this.currentGravityVector = { x, y };
     this.currentScale = scale;
@@ -139,8 +146,9 @@ export class AntiGravityEngine {
       if (!body || body.isStatic) continue;
 
       const mass = body.mass;
-      const gravY = this.world.gravity.y * this.world.gravity.scale * 1000;
-      const gravX = this.world.gravity.x * this.world.gravity.scale * 1000;
+      const gravityObj = this.engine.gravity || this.world.gravity || { x: 0, y: 1.0, scale: 0.001 };
+      const gravY = gravityObj.y * gravityObj.scale * 1000;
+      const gravX = gravityObj.x * gravityObj.scale * 1000;
 
       if (mod.mode === 'ZERO_G') {
         // Counteract global gravity precisely: F = -m * g
