@@ -21,3 +21,5 @@ export class ParticleGrid {
     });
   }
 }
+
+ParticleGrid.defaultCount = 60;
