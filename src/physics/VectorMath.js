@@ -35,3 +35,4 @@ export function addVectors(v1, v2) {
 }
 
 export function vectorDistance(v1, v2) { return Math.hypot(v2.x - v1.x, v2.y - v1.y); }
+/** VectorMath unit version 1.0 */
