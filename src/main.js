@@ -35,6 +35,11 @@ window.addEventListener('DOMContentLoaded', () => {
       // Execute JSON physics payload directly on AntiGravityEngine
       const result = physicsWorld.antiGravityEngine.executeAiPayload(payload, physicsWorld.entities);
       ui.updateHUD(levelManager.getHUDState());
+
+      // Show large center stage banner notification
+      if (payload.hudMessage) {
+        visualJuice.showBannerNotification(payload.hudMessage, "info", 2500);
+      }
     }
   });
 
@@ -45,14 +50,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
   levelManager.onWin = (chamber) => {
     ui.triggerWinEffect();
+    visualJuice.showBannerNotification(`🎉 EXTRACTION PORTAL REACHED! CHAMBER CLEAR!`, "success", 3000);
     ui.setMessage(`🎉 Extraction Portal Reached! Chamber ${chamber.number} Cleared!`, "success");
     setTimeout(() => {
       levelManager.nextChamber();
-    }, 2200);
+    }, 2400);
   };
 
   levelManager.onDeath = (hazardType) => {
     soundEngine.playDeathBuzz();
+    visualJuice.showBannerNotification(`💥 SPARK DESTROYED BY ${hazardType.toUpperCase()}!`, "danger", 2000);
     ui.setMessage(`💥 Spark was destroyed by ${hazardType}! Rebuilding chamber...`, "danger");
     setTimeout(() => {
       levelManager.resetCurrentChamber();
@@ -62,77 +69,35 @@ window.addEventListener('DOMContentLoaded', () => {
   // 4. Load initial chamber
   levelManager.loadChamber(0);
 
-  // 5. Main Game & Custom Rendering Loop (60 FPS)
+  // 5. Main Game & High-Precision Render Loop (60 FPS)
   function renderLoop() {
-    // Step Matter.js physics engine
+    // Step Matter.js physics engine with fixed 60 FPS delta
     physicsWorld.update(16.666);
 
-    const ctx = physicsWorld.ctx;
     const isInv = physicsWorld.antiGravityEngine.isGlobalInverted;
     const gVec = physicsWorld.antiGravityEngine.currentGravityVector;
 
-    // Clear Canvas
-    ctx.clearRect(0, 0, width, height);
+    // 1. Draw High-Clarity Stage Background & Vector Grid
+    visualJuice.drawStageBackground(isInv, gVec);
 
-    // Render Ambient Dust Particle Grid
-    visualJuice.updateParticles(isInv, gVec);
-    visualJuice.drawParticles(isInv);
-
-    // Render Rigid Bodies (Matter.js custom visual style)
+    // 2. Draw Rigid Bodies with Metadata Labels (Red Barrier, Blue Platform, Crates)
     const bodies = Matter.Composite.allBodies(physicsWorld.world);
-    ctx.save();
+    visualJuice.drawBodies(bodies);
 
-    bodies.forEach(body => {
-      if (body.label === 'spark' || body.label === 'portal' || body.isSensor) return;
-
-      const pos = body.position;
-      const angle = body.angle;
-
-      ctx.save();
-      ctx.translate(pos.x, pos.y);
-      ctx.rotate(angle);
-
-      if (body.label === 'red_block') {
-        ctx.fillStyle = '#ff0055';
-        ctx.shadowColor = '#ff0055';
-        ctx.shadowBlur = 12;
-      } else if (body.label === 'blue_block') {
-        ctx.fillStyle = '#0088ff';
-        ctx.shadowColor = '#0088ff';
-        ctx.shadowBlur = 10;
-      } else if (body.label === 'crate') {
-        ctx.fillStyle = '#b537f2';
-        ctx.shadowColor = '#b537f2';
-        ctx.shadowBlur = 10;
-      } else {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-        ctx.shadowBlur = 0;
-      }
-
-      const bounds = body.bounds;
-      const w = bounds.max.x - bounds.min.x;
-      const h = bounds.max.y - bounds.min.y;
-
-      ctx.fillRect(-w / 2, -h / 2, w, h);
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(-w / 2, -h / 2, w, h);
-
-      ctx.restore();
-    });
-    ctx.restore();
-
-    // Render Hazard Lasers & Spikes
+    // 3. Draw Hazard Lasers & Spikes
     visualJuice.drawHazards(physicsWorld.entities.lasers, physicsWorld.entities.spikes);
 
-    // Render Goal Portal Vortex
+    // 4. Draw Goal Portal Vortex with Target Label
     visualJuice.drawPortal(physicsWorld.entities.portal);
 
-    // Render Spark Protagonist
+    // 5. Draw Spark Protagonist with Velocity Vector
     visualJuice.drawSpark(physicsWorld.entities.spark);
 
-    // Render Directional Force Vector Arrows over active anti-gravity entities
+    // 6. Draw Selective Anti-Gravity Force Vector Badges
     visualJuice.drawEntityVectorBadges(physicsWorld.antiGravityEngine.activeEntityModifiers);
+
+    // 7. Draw Large Stage Banner Notification
+    visualJuice.drawBannerNotification();
 
     requestAnimationFrame(renderLoop);
   }
