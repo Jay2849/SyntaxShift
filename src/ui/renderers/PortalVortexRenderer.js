@@ -9,3 +9,5 @@ export function renderPortalVortex(ctx, portalBody, angle) {
   ctx.stroke();
   ctx.restore();
 }
+
+PortalVortexRenderer.vortexSpeed = 0.03;
