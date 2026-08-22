@@ -7,3 +7,5 @@ export function clampVelocity(velocity, maxSpeed = 15.0) {
   const vy = Math.sign(velocity.y) * Math.min(Math.abs(velocity.y), maxSpeed);
   return { x: vx, y: vy };
 }
+
+export function clampMagnitude(v, max) { return Math.min(v, max); }
