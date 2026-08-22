@@ -1,76 +1,105 @@
-# SYSTEM PROMPT & ARCHITECTURAL DIRECTIVE: SYNTAXSHIFT ANTIGRAVITY ENGINE
+<div align="center">
 
-> **SyntaxShift: The AI Physics Sandbox** (Developed by Team J for Puzzle Masters Hackathon 2026)  
-> *Solve dynamic 2D physics puzzles using the power of Natural Language Processing and Google Gemini API.*
+# ⚡ SYNTAXSHIFT ⚡
+### *The AI Physics Sandbox & Vector Anti-Gravity Engine*
 
----
-
-## 1. MISSION & CORE DIRECTIVE
-
-You are reading the production-grade architectural specification and technical master blueprint for the **Anti-Gravity and Vector Gravitation Subsystem** of **SyntaxShift: The AI Physics Sandbox**.
-
-SyntaxShift bridges large language models (LLMs) and real-time rigid-body 2D physics engines. Players guide **Spark**—a high-density kinetic energy orb—through hazardous puzzle chambers by issuing free-form natural language directives to an in-game hacker terminal. Rather than manipulating character movement controls directly, players shape the underlying physical law of the environment itself (vector gravity, selective mass floating, elasticity, surface friction, and linear air resistance).
+[![Vite](https://img.shields.io/badge/Vite-6.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Matter.js](https://img.shields.io/badge/Matter.js-2D_Physics-4BC51D?style=for-the-badge)](https://brm.io/matter-js/)
+[![Google Gemini API](https://img.shields.io/badge/Google_Gemini-API_v1.5_Flash-8E75B2?style=for-the-badge&logo=googlecloud&logoColor=white)](https://ai.google.dev/)
+[![Web Audio API](https://img.shields.io/badge/Web_Audio-Synthesizer_SFX-FF5722?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+[![Status](https://img.shields.io/badge/Production-100%25_Ready-00F3FF?style=for-the-badge)](https://github.com/Jay2849/SyntaxShift)
 
 ---
 
-## 2. THE MATHEMATICAL & PHYSICAL FOUNDATION OF ANTIGRAVITY
+**SyntaxShift** is an open-ended 2D physics puzzle environment driven by Google Gemini API Natural Language Processing and Matter.js rigid-body dynamics. Players manipulate vector gravitational fields, entity buoyant forces, material elasticity, surface friction, and kinetic drag parameters using natural language directives to guide **Spark** through 5 hazardous chambers.
 
-### 2.1 Classical vs. Anti-Gravity Vector Field Model
-In standard Cartesian HTML5 Canvas coordinate space (where $+X$ points right and $+Y$ points downwards):
+[Architecture](#1-system-architecture) • [Physics Math](#2-mathematical--physical-foundation) • [NLP Schema](#3-natural-language-to-physics-compiler) • [Chambers](#4-puzzle-chambers-specification) • [Quick Start](#5-developer-getting-started)
+
+---
+
+</div>
+
+## 1. SYSTEM ARCHITECTURE
+
+SyntaxShift decouples prompt parsing from physics execution through a deterministic fallback pipeline and strict JSON contracts.
+
+```
+                  +-----------------------------------+
+                  |   Player Natural Language Input   |
+                  +-----------------------------------+
+                                    |
+                                    v
+                  +-----------------------------------+
+                  |    Google Gemini API (LLM)        |
+                  |  OR Sub-10ms Deterministic Parser |
+                  +-----------------------------------+
+                                    |
+                                    v [Strict JSON Contract]
+                  +-----------------------------------+
+                  |   AntiGravity Engine Subsystem    |
+                  +-----------------------------------+
+                                    |
+                                    v [Continuous Tick Hook]
+                  +-----------------------------------+
+                  |  Matter.js 2D World Simulation    |
+                  |   Canvas Shaders & Audio Juice    |
+                  +-----------------------------------+
+```
+
+### Tech Stack Specifications
+- **Core Engine & Bundler**: Vite (ES Modules) + HTML5 Canvas
+- **2D Physics Engine**: Matter.js (Rigid-body collisions, constraints, forces)
+- **AI NLP Pipeline**: `@google/generative-ai` (Gemini 1.5 Flash) + `DeterministicFallbackParser` (Zero-latency offline engine)
+- **Audio Synthesizer**: Procedural Web Audio API Sound Engine (0 asset downloads)
+- **Styling System**: Cyberpunk Neon Dark CSS (`#0a0b10` base, `#00f3ff` cyan, `#ff0055` pink accents, CRT scanlines)
+
+---
+
+## 2. MATHEMATICAL & PHYSICAL FOUNDATION
+
+### 2.1 Classical vs. Anti-Gravity Field Model
+Standard Cartesian coordinate space ($+X$ right, $+Y$ down):
 
 - **Standard Earth-like Gravity Field:**
-  $$\vec{g}_{\text{standard}} = (g_x, g_y) = (0, +1.0) \cdot c_{\text{engine}}$$
+  $$\vec{g}_{\text{standard}} = (g_x, g_y) = (0, +1.0) \cdot c_{\text{scale}}$$
 
-- **Complete Negative Gravity (True Anti-Gravity):**
-  $$\vec{g}_{\text{anti}} = (0, -g_y) = (0, -1.0) \cdot c_{\text{engine}}$$
+- **True Negative Anti-Gravity:**
+  $$\vec{g}_{\text{anti}} = (0, -g_y) = (0, -1.0) \cdot c_{\text{scale}}$$
 
 - **Multi-Axial Arbitrary Gravitational Vector:**
   $$\vec{g}(\theta, M) = (M \cos\theta, M \sin\theta)$$
   where $\theta \in [0, 2\pi)$ and magnitude $M \in [0.0, 3.0]$.
 
 ### 2.2 Local vs. Global Gravitational Overrides
-The engine supports two distinct modes of gravitational mutation:
-
 1. **Global Environmental Gravity:**
-   - Directly mutates `world.gravity.x` and `world.gravity.y` in Matter.js.
-   - Impacts all non-static rigid bodies concurrently (Spark, red hazard blocks, debris, pushable crates).
+   Mutates `world.gravity.x` and `world.gravity.y` directly across all non-static bodies concurrently.
 
-2. **Selective Entity Anti-Gravity (Isolated Entity Levitation):**
-   - The global environment gravity remains unaffected: $\vec{g}_{\text{global}} = (0, +1.0)$.
-   - For a specific target body $B_i$, an opposing upward force vector $\vec{F}_{\text{anti}}$ is calculated during each physics engine update tick (inside the `beforeUpdate` tick hook):
-     $$\vec{F}_{\text{anti}} = -m_i \cdot \vec{g}_{\text{global}} + \vec{F}_{\text{desired}}$$
-   - When $\vec{F}_{\text{desired}} = \vec{0}$, body $B_i$ experiences **zero-G floating** (true neutral buoyancy).
-   - When $\vec{F}_{\text{desired}} = (0, -m_i \cdot |g|)$, body $B_i$ experiences **inverted $-1g$ upward flight**.
+2. **Selective Entity Anti-Gravity (Isolated Buoyancy):**
+   Global engine gravity remains unaffected: $\vec{g}_{\text{global}} = (0, +1.0)$.  
+   For a specific target body $B_i$, an opposing force vector $\vec{F}_{\text{anti}}$ is applied inside the `beforeUpdate` physics tick:
+   $$\vec{F}_{\text{anti}} = -m_i \cdot \vec{g}_{\text{global}} + \vec{F}_{\text{desired}}$$
+   - $\vec{F}_{\text{desired}} = \vec{0} \implies$ **Zero-G floating (Neutral buoyancy)**
+   - $\vec{F}_{\text{desired}} = (0, -m_i |g|) \implies$ **Inverted $-1g$ upward flight**
 
-### 2.3 Terminal Velocity & Damping Mechanics in Inverted Fields
-Anti-gravity without kinetic drag results in endless linear acceleration, causing rigid bodies to tunnel through geometry at high velocities:
-
-- **Velocity Clamping (Max Speed Boundary):**
-  $$v_y = \text{sign}(v_y) \cdot \min(|v_y|, v_{\text{max}})$$
-  where $v_{\text{max}} = 15.0 \text{ px/tick}$.
-
-- **Air Resistance (Linear Drag Damping):**
-  $$\vec{F}_{\text{drag}} = -\frac{1}{2} \rho C_d A |v| \vec{v} \approx -k_{\text{air}} \vec{v}$$
-  Engine implementation: `body.frictionAir = 0.04 - 0.05` (prevents uncontrolled ceiling impacts and clipping).
+### 2.3 Terminal Velocity & Air Drag Damping
+Anti-gravity without kinetic friction results in unbounded acceleration:
+- **Velocity Clamping:** $v_y = \text{sign}(v_y) \cdot \min(|v_y|, v_{\text{max}})$, where $v_{\text{max}} = 15.0 \text{ px/tick}$.
+- **Air Resistance Damping:** $\vec{F}_{\text{drag}} \approx -k_{\text{air}} \vec{v}$, configured via `body.frictionAir = 0.04 - 0.05`.
 
 ---
 
-## 3. NATURAL LANGUAGE PROMPT TO PHYSICS COMPILER (NLP PIPELINE)
+## 3. NATURAL LANGUAGE TO PHYSICS COMPILER
 
-### 3.1 Strict JSON Extraction Schema
-The Gemini API consumes free-form player prompt inputs and outputs the following structured JSON contract without preamble or conversational wrapper:
+### 3.1 JSON Contract Schema
 
 ```json
 {
   "commandType": "PHYSICS_MUTATION",
-  "target": "GLOBAL" | "SPARK" | "RED_BLOCKS" | "BLUE_BLOCKS" | "CRATES" | "PARTICLES",
+  "target": "GLOBAL" | "SPARK" | "RED_BLOCKS" | "BLUE_BLOCKS" | "CRATES",
   "antigravity": {
     "enabled": true,
     "mode": "INVERT" | "ZERO_G" | "PULL_UP" | "LOCAL_FIELD" | "OSCILLATE",
-    "vector": {
-      "x": 0.0,
-      "y": -1.0
-    },
+    "vector": { "x": 0.0, "y": -1.0 },
     "multiplier": 1.0,
     "durationSeconds": 5.0,
     "damping": 0.05
@@ -84,156 +113,94 @@ The Gemini API consumes free-form player prompt inputs and outputs the following
 }
 ```
 
-### 3.2 Prompt Taxonomy & Intent Mapping Examples
-- **Direct Inversion Prompts:**
-  - *"Turn gravity upside down"* $\rightarrow$ `{"target": "GLOBAL", "antigravity": {"mode": "INVERT", "vector": {"x": 0, "y": -1.0}}}`
-  - *"Make me fall to the ceiling"* $\rightarrow$ `{"target": "SPARK", "antigravity": {"mode": "INVERT", "vector": {"x": 0, "y": -1.0}}}`
-- **Zero-G Float Prompts:**
-  - *"Disable gravity entirely"*, *"Make everything weightless"*, *"Moon float mode"* $\rightarrow$ `{"target": "GLOBAL", "antigravity": {"mode": "ZERO_G", "vector": {"x": 0, "y": 0}}}`
-- **Targeted / Filtered Anti-Gravity:**
-  - *"Lift only the red barriers upward"*, *"Anti-gravity on purple blocks only"* $\rightarrow$ `{"target": "RED_BLOCKS", "antigravity": {"mode": "PULL_UP", "vector": {"x": 0, "y": -1.5}}}`
-- **Directional Vector Push Prompts:**
-  - *"Blow everything towards the top-right corner"* $\rightarrow$ `{"target": "GLOBAL", "antigravity": {"mode": "LOCAL_FIELD", "vector": {"x": 1.0, "y": -1.0}}}`
-
-### 3.3 The Deterministic Fallback Parser (Sub-10ms Offline Engine)
-If no Gemini API key is configured or network latency exceeds 350ms, SyntaxShift automatically switches to the zero-dependency deterministic rule matrix parser:
-
-```javascript
-import { deterministicFallbackParser } from './src/ai/DeterministicFallbackParser.js';
-
-const result = deterministicFallbackParser("Invert gravity for red blocks");
-// Executes in < 10ms offline with zero network overhead!
-```
+### 3.2 Offline Sub-10ms Fallback Engine
+When no Gemini API key is configured or network latency exceeds 350ms, SyntaxShift automatically falls back to its keyword matrix parser:
+- `"Invert gravity upside down"` $\rightarrow$ Global inverted $-1G$ vector.
+- `"Zero gravity float mode"` $\rightarrow$ Neutral buoyancy mode.
+- `"Lift only red blocks upward"` $\rightarrow$ Isolated red block flotation.
+- `"Make Spark super bouncy"` $\rightarrow$ Restitution set to $0.92$.
 
 ---
 
-## 4. LEVEL DESIGN: 5 DEDICATED ANTIGRAVITY PUZZLE CHAMBERS
+## 4. PUZZLE CHAMBERS SPECIFICATION
 
-| Chamber | Name | Objective & Mechanics | Intended Prompt Solution |
+| Chamber | Title | Objective | Intended Directives |
 | :--- | :--- | :--- | :--- |
-| **01** | **The Inversion Tutorial** | Spark starts on floor; portal is on ceiling behind a lower barrier wall. | *"Invert gravity upside down"* |
-| **02** | **Selective Mass Separation** | Spark trapped under heavy red blocks beneath lethal ceiling lasers. | *"Lift only red blocks upward"* |
-| **03** | **The Gravitational Chasm** | Wide pit lined with spikes, ceiling lined with proximity mines. | *"Zero gravity float with slight right drift"* |
-| **04** | **Kinetic Pendulum Inversion** | Curved U-ramp; portal high on an isolated ledge. | *"Invert gravity when Spark reaches ramp tip"* |
-| **05** | **Anti-Gravity Laser Labyrinth** | Moving vertical laser gates with timed openings & obstacles. | *"Make Spark super bouncy with zero friction"* |
+| **01** | **The Inversion Tutorial** | Lift Spark past lower ground barrier into ceiling extraction portal. | *"Invert gravity upside down"* |
+| **02** | **Selective Mass Separation** | Lift heavy red blocks into ceiling laser grid to free trapped Spark. | *"Lift only red blocks upward"* |
+| **03** | **The Gravitational Chasm** | Glide horizontally across spike pit avoiding ceiling mines. | *"Zero gravity float with right drift"* |
+| **04** | **Kinetic Pendulum Inversion** | Build momentum on U-ramp, flip gravity at apex to reach upper ledge. | *"Invert gravity at apex"* |
+| **05** | **Anti-Gravity Laser Labyrinth** | Navigate moving vertical laser gates using bounce & buoyancy. | *"Super bouncy Spark with zero friction"* |
 
 ---
 
-## 5. ARCHITECTURAL CODE IMPLEMENTATION
-
-The codebase is modularized cleanly under `src/`:
-
-```
-j:/SyntaxShift/
-├── index.html                  # Cyberpunk Terminal HTML layout & HUD
-├── vite.config.js              # Vite build setup
-├── package.json                # Dependencies (@google/generative-ai, matter-js, canvas-confetti)
-└── src/
-    ├── css/
-    │   └── style.css           # Cyberpunk dark mode CSS system (scanlines, glassmorphism, glowing HUD)
-    ├── physics/
-    │   ├── AntiGravityEngine.js# Classical vs. Anti-gravity math model & continuous tick applicator
-    │   └── PhysicsWorld.js     # Matter.js world setup, collision handlers, entity spawners
-    ├── ai/
-    │   ├── GeminiCompiler.js   # Google Gemini API SDK wrapper & prompt system instruction
-    │   └── DeterministicFallbackParser.js # Sub-10ms offline keyword matrix parser
-    ├── levels/
-    │   ├── ChamberConfigs.js   # 5 dedicated puzzle chamber layouts & entity parameters
-    │   └── LevelManager.js     # Energy charge tracking, level reset, win/death triggers
-    ├── audio/
-    │   └── SoundEngine.js      # Web Audio API synthesized SFX (sub-bass drop 60Hz, sweeps, chimes)
-    ├── ui/
-    │   ├── TerminalUI.js       # Hacker terminal dock, preset chips, API key & JSON modal handlers
-    │   └── VisualJuice.js      # Dust particle emitters, chromatic flash, directional vector arrows
-    └── main.js                 # App entry point & 60 FPS animation render loop
-```
-
-### Core `AntiGravityEngine` Class Reference
-
-```javascript
-import Matter from 'matter-js';
-
-export class AntiGravityEngine {
-  constructor(matterWorld, matterEngine) {
-    this.world = matterWorld;
-    this.engine = matterEngine;
-    this.activeEntityModifiers = new Map();
-    this.isGlobalInverted = false;
-    
-    // Register custom beforeUpdate physics hook
-    Matter.Events.on(this.engine, 'beforeUpdate', () => this.applyContinuousForces());
-  }
-
-  setGlobalGravity(x, y, scale = 0.001) {
-    this.world.gravity.x = x;
-    this.world.gravity.y = y;
-    this.world.gravity.scale = scale;
-    this.isGlobalInverted = y < 0;
-  }
-
-  applyContinuousForces() {
-    // 1. Terminal velocity clamping
-    // 2. Continuous isolated floating & upward force application
-  }
-}
-```
-
----
-
-## 6. VISUAL FEEDBACK, SHADERS & AUDIO-VISUAL JUICE
-
-- **Particle Inversion Emitters:** Background dust/ambient glow particles reverse velocity vectors from $(0, +v)$ to $(0, -v \cdot 2.5)$.
-- **Chromatic Aberration Pulse:** Brief screen distortion along the Y-axis using CSS compositing to communicate gravitational rupture.
-- **Object HUD Badges:** Impacted bodies render a subtle neon cyan/pink halo with vector arrows indicating current directional pull.
-- **Synthesized Audio Engine:**
-  - Low-frequency sub-bass drop ($60\text{Hz}$) on gravity shift.
-  - Ascending high-pass filter frequency sweep on inversion.
-  - Victory portal chime fanfare & keystroke SFX.
-
----
-
-## 7. EXECUTION & VALIDATION CRITERIA
-
-- ✅ **0% Engine Crash Rate:** Malformed JSON or invalid prompt gracefully defaults to safe fallback without crashing physics simulation loop.
-- ✅ **60 FPS Performance:** Optimized Matter.js render loop with zero memory leaks during multi-body vector inversions.
-- ✅ **Sub-10ms Fallback Latency:** Instant response when running offline without Gemini API keys.
-- ✅ **100% Production Ready:** Vite bundle verified with clean output.
-
----
-
-## 8. GETTING STARTED & DEVELOPER SETUP
+## 5. DEVELOPER GETTING STARTED
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v18+ recommended)
+- Node.js (v18+)
 - Git
 
-### Installation & Local Execution
+### Installation & Execution
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Jay2849/SyntaxShift.git
-   cd SyntaxShift
-   ```
+```bash
+# 1. Clone the repository
+git clone https://github.com/Jay2849/SyntaxShift.git
+cd SyntaxShift
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+# 2. Install dependencies
+npm install
 
-3. **Run local development server:**
-   ```bash
-   npm run dev
-   ```
-   Open `http://localhost:3000` in your browser.
+# 3. Launch Vite Development Server
+npm run dev
+```
 
-4. **Production Build:**
-   ```bash
-   npm run build
-   ```
+Open `http://localhost:3000` in your browser.
 
-5. **(Optional) Configure Gemini API Key:**
-   Click the **🔑 AI Key** button in the top HUD of the game and enter your Google Gemini API key to experience real-time LLM physics prompt compilation!
+### Production Build
+```bash
+npm run build
+```
 
 ---
 
-### Developed by Team J for Puzzle Masters Hackathon 2026 🚀
+## 6. PROJECT DIRECTORY STRUCTURE
+
+```
+SyntaxShift/
+├── index.html                    # Hacker terminal HTML layout & HUD
+├── vite.config.js                # Vite build configuration
+├── package.json                  # Engine dependencies (@google/generative-ai, matter-js)
+├── src/
+│   ├── css/style.css             # Cyberpunk design system & CRT scanlines
+│   ├── physics/                  # Matter.js world & AntiGravity engine modules
+│   │   ├── AntiGravityEngine.js
+│   │   ├── PhysicsWorld.js
+│   │   ├── VectorMath.js
+│   │   ├── VelocityClamp.js
+│   │   ├── AirDrag.js
+│   │   ├── ForceUtils.js
+│   │   └── MassUtils.js
+│   ├── ai/                       # LLM compiler & offline matchers
+│   │   ├── GeminiCompiler.js
+│   │   ├── DeterministicFallbackParser.js
+│   │   └── matchers/
+│   ├── levels/                   # 5 dedicated puzzle chambers & level manager
+│   │   ├── LevelManager.js
+│   │   └── chambers/
+│   ├── audio/                    # Web Audio API sound synthesizers
+│   │   ├── SoundEngine.js
+│   │   └── synths/
+│   └── ui/                       # Terminal UI & visual shaders
+│       ├── TerminalUI.js
+│       ├── VisualJuice.js
+│       └── renderers/
+└── tests/                        # Automated unit test suite
+```
+
+---
+
+<div align="center">
+
+**Developed by Team J for Puzzle Masters Hackathon 2026 🚀**
+
+</div>
