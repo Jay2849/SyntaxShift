@@ -15,3 +15,5 @@ export const Chamber4 = {
     world.spawnSpikePit(500, 520, 600, 30);
   }
 };
+
+Chamber4.difficulty = "HARD";
