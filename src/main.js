@@ -22,8 +22,6 @@ import { CameraShakeController } from './ui/CameraShakeController.js';
 import { renderTargetReticle } from './ui/renderers/TargetReticleRenderer.js';
 import { GravityCompassWidget } from './ui/components/GravityCompassWidget.js';
 import { renderAudioEqualizer } from './ui/components/AudioEqualizerWidget.js';
-import { MobileTouchControls } from './ui/components/MobileTouchControls.js';
-import { OrientationManager } from './ui/components/OrientationManager.js';
 
 /**
  * SYNTAXSHIFT MAIN APPLICATION ENTRY POINT
@@ -34,10 +32,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const width = 960;
   const height = 540;
-
-  // 0. Initialize Mobile Landscape Orientation Guard & Auto-Lock
-  const orientationManager = new OrientationManager('orientation-guard');
-  orientationManager.attachTouchAutoLock();
 
   // 1. Initialize Subsystems
   const physicsWorld = new PhysicsWorld(canvas, width, height);
@@ -57,14 +51,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const logDrawer = new LogConsoleDrawer();
 
   logDrawer.log("SyntaxShift Anti-Gravity Telemetry Kernel Initialized.");
-
-  // Mobile Touch Controls Overlay
-  const mobileControlsContainer = document.getElementById('mobile-touch-controls');
-  if (mobileControlsContainer) {
-    new MobileTouchControls(mobileControlsContainer, (promptActionText) => {
-      ui.handlePromptExecution(promptActionText);
-    });
-  }
 
   // 2. Initialize UI Controller
   const ui = new TerminalUI({
