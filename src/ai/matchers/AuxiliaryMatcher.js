@@ -5,3 +5,5 @@ export function matchAuxiliaryModifiers(query) {
     massMultiplier: query.includes("heavy") ? 3.0 : query.includes("light") ? 0.3 : null
   };
 }
+
+export function hasAuxiliaryModifiers(aux) { return Boolean(aux && (aux.friction !== null || aux.restitution !== null)); }
