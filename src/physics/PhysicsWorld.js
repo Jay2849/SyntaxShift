@@ -238,6 +238,16 @@ export class PhysicsWorld {
             if (this.onPlayerDeath) this.onPlayerDeath(other.label);
           }
         }
+
+        // Red Hazard Blocks touching Laser Grid -> Vaporize & Remove Block
+        const isRedBlock = bodyA.label === 'red_block' || bodyB.label === 'red_block';
+        if (isRedBlock) {
+          const redBlock = bodyA.label === 'red_block' ? bodyA : bodyB;
+          const targetOther = bodyA.label === 'red_block' ? bodyB : bodyA;
+          if (targetOther.label === 'laser_grid') {
+            this.Composite.remove(this.world, redBlock);
+          }
+        }
       }
     });
   }
