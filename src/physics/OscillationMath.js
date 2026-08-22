@@ -6,3 +6,4 @@ export function calculateLevitationWave(elapsedSec, mass, amplitude = 0.0008, fr
 }
 
 export function getSinusoidalPhase(time) { return (time * 1000) % 360; }
+/** OscillationMath unit version 1.0 */
