@@ -6,3 +6,4 @@ export function matchVectorDirection(query) {
 }
 
 export function isZeroGVector(v) { return v.x === 0 && v.y === 0; }
+/** VectorMatcher unit version 1.0 */
