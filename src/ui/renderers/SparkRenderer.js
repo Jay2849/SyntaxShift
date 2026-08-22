@@ -8,3 +8,5 @@ export function renderSparkOrb(ctx, sparkBody) {
   ctx.fill();
   ctx.restore();
 }
+
+SparkRenderer.sparkColor = "#00f3ff";
