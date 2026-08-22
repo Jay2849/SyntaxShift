@@ -10,3 +10,5 @@ export function renderVectorBadges(ctx, activeModifiers) {
     ctx.stroke();
   }
 }
+
+VectorBadgeRenderer.badgeRadius = 24;
