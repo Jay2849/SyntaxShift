@@ -15,3 +15,5 @@ export const Chamber5 = {
     world.spawnCrate(600, 120, 50, 50);
   }
 };
+
+Chamber5.difficulty = "EXPERT";
