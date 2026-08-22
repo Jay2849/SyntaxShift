@@ -2,25 +2,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg-dark: #07080c;
-  --bg-card: rgba(16, 20, 32, 0.85);
-  --bg-terminal: rgba(10, 14, 23, 0.95);
+  --bg-dark: #090d16;
+  --bg-card: rgba(15, 23, 42, 0.92);
+  --bg-terminal: #0f172a;
   
-  --neon-cyan: #00f3ff;
-  --neon-cyan-glow: rgba(0, 243, 255, 0.4);
-  --neon-pink: #ff0055;
-  --neon-pink-glow: rgba(255, 0, 85, 0.4);
-  --neon-purple: #b537f2;
-  --neon-purple-glow: rgba(181, 55, 242, 0.4);
-  --neon-yellow: #ffe600;
-  --neon-green: #00ff66;
+  --neon-cyan: #38bdf8;
+  --neon-cyan-glow: rgba(56, 189, 248, 0.25);
+  --neon-pink: #f43f5e;
+  --neon-pink-glow: rgba(244, 63, 94, 0.25);
+  --neon-purple: #a855f7;
+  --neon-purple-glow: rgba(168, 85, 247, 0.25);
+  --neon-yellow: #fbbf24;
+  --neon-green: #34d399;
   
-  --text-main: #e2e8f0;
-  --text-muted: #94a3b8;
-  --text-bright: #ffffff;
+  --text-main: #cbd5e1;
+  --text-muted: #64748b;
+  --text-bright: #f8fafc;
   
-  --border-neon: rgba(0, 243, 255, 0.3);
-  --border-dim: rgba(255, 255, 255, 0.1);
+  --border-neon: rgba(56, 189, 248, 0.2);
+  --border-dim: rgba(255, 255, 255, 0.08);
 
   --font-display: 'Orbitron', sans-serif;
   --font-mono: 'Fira Code', monospace;
@@ -41,10 +41,11 @@ body, html {
   background-color: var(--bg-dark);
   color: var(--text-main);
   font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(0, 243, 255, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 85% 85%, rgba(181, 55, 242, 0.05) 0%, transparent 40%),
-    linear-gradient(to bottom, rgba(7, 8, 12, 0.9), rgba(10, 11, 16, 0.95));
+    radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(168, 85, 247, 0.04) 0%, transparent 40%),
+    linear-gradient(to bottom, #090d16, #0f172a);
 }
 
 /* CRT Scanline Overlay */
@@ -58,10 +59,10 @@ body, html {
   z-index: 999;
   background: linear-gradient(
     rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.15) 50%
+    rgba(0, 0, 0, 0.08) 50%
   );
   background-size: 100% 4px;
-  opacity: 0.6;
+  opacity: 0.15;
 }
 
 /* App Layout Grid */

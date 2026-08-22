@@ -51,14 +51,14 @@ export class VisualJuice {
     try {
       // Deep void gradient
       const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
-      bgGrad.addColorStop(0, '#06080e');
-      bgGrad.addColorStop(1, '#0b0f19');
+      bgGrad.addColorStop(0, '#0b0f19');
+      bgGrad.addColorStop(1, '#0f172a');
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, w, h);
 
       // Grid Lines
       ctx.save();
-      ctx.strokeStyle = 'rgba(0, 243, 255, 0.05)';
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.04)';
       ctx.lineWidth = 1;
       const gridSize = 40;
 
@@ -72,21 +72,21 @@ export class VisualJuice {
       }
 
       // Ceiling & Floor Beams
-      ctx.fillStyle = isGlobalInverted ? 'rgba(255, 0, 85, 0.25)' : 'rgba(0, 243, 255, 0.1)';
+      ctx.fillStyle = isGlobalInverted ? 'rgba(244, 63, 94, 0.25)' : 'rgba(56, 189, 248, 0.1)';
       ctx.fillRect(0, 0, w, 14);
-      ctx.fillStyle = isGlobalInverted ? '#ff0055' : '#00f3ff';
+      ctx.fillStyle = isGlobalInverted ? '#f43f5e' : '#38bdf8';
       ctx.fillRect(0, 12, w, 2);
 
-      ctx.fillStyle = !isGlobalInverted ? 'rgba(0, 243, 255, 0.25)' : 'rgba(255, 0, 85, 0.1)';
+      ctx.fillStyle = !isGlobalInverted ? 'rgba(56, 189, 248, 0.25)' : 'rgba(244, 63, 94, 0.1)';
       ctx.fillRect(0, h - 14, w, 14);
-      ctx.fillStyle = !isGlobalInverted ? '#00f3ff' : '#ff0055';
+      ctx.fillStyle = !isGlobalInverted ? '#38bdf8' : '#f43f5e';
       ctx.fillRect(0, h - 14, w, 2);
 
       ctx.font = 'bold 10px "Fira Code", monospace';
-      ctx.fillStyle = isGlobalInverted ? '#ff0055' : 'rgba(0, 243, 255, 0.7)';
+      ctx.fillStyle = isGlobalInverted ? '#f43f5e' : 'rgba(56, 189, 248, 0.7)';
       ctx.fillText('▲ CEILING SURFACE [INVERTED TARGET]', 20, 24);
 
-      ctx.fillStyle = !isGlobalInverted ? '#00f3ff' : 'rgba(255, 0, 85, 0.7)';
+      ctx.fillStyle = !isGlobalInverted ? '#38bdf8' : 'rgba(244, 63, 94, 0.7)';
       ctx.fillText('▼ GROUND SURFACE [STANDARD 1G FLOOR]', 20, h - 20);
 
       this.updateParticles(isGlobalInverted, gravityVector);
