@@ -6,3 +6,4 @@ export function calculateBuoyantMass(bodyMass, gravityScale = 0.001) {
 }
 
 export function getDensityMultiplier(isHeavy) { return isHeavy ? 0.005 : 0.001; }
+/** MassUtils unit version 1.0 */
