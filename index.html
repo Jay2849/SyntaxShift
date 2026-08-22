@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SyntaxShift: The AI Physics Sandbox - Anti-Gravity Engine</title>
+  <link rel="stylesheet" href="/src/css/style.css" />
+</head>
+<body>
+  <!-- CRT Scanline overlay -->
+  <div class="scanline-overlay"></div>
+
+  <div id="app">
+    <!-- Top HUD Bar -->
+    <header class="hud-bar">
+      <div class="brand-title">
+        SYNTAX<span style="color: var(--neon-pink)">SHIFT</span>
+        <span class="brand-badge">ANTI-GRAVITY ENGINE</span>
+      </div>
+
+      <div class="hud-stats">
+        <div class="stat-box">
+          <span class="stat-label">Chamber</span>
+          <span class="stat-value" id="hud-level-num">1 / 5</span>
+        </div>
+
+        <div class="stat-box">
+          <span class="stat-label">Energy</span>
+          <span class="stat-value energy" id="hud-energy-charges">⚡ 3 / 3</span>
+        </div>
+
+        <div class="stat-box">
+          <span class="stat-label">Vector Gravity</span>
+          <span class="stat-value gravity-badge" id="hud-gravity-state">
+            <span id="grav-icon">⬇️</span> <span id="grav-text">(0.0, +1.0)</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="hud-actions">
+        <button class="btn-icon" id="btn-open-levels">🎮 Chambers</button>
+        <button class="btn-icon" id="btn-api-key">🔑 AI Key</button>
+        <button class="btn-icon danger" id="btn-reset-chamber">🔄 Reset</button>
+      </div>
+    </header>
+
+    <!-- Main Viewport / 2D Matter.js Simulation Canvas Stage -->
+    <main class="stage-container" id="stage-container">
+      <canvas id="physics-canvas"></canvas>
+
+      <!-- Chamber Metadata Overlay -->
+      <div class="stage-overlay">
+        <div class="chamber-title-card">
+          <div class="chamber-number" id="card-chamber-num">CHAMBER 01</div>
+          <div class="chamber-name" id="card-chamber-name">The Inversion Tutorial</div>
+          <div class="chamber-objective" id="card-chamber-objective">Guide Spark to ceiling portal by inverting gravity.</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Terminal Control Dock -->
+    <footer class="dock-container">
+      <!-- Quick Prompt Suggestions Chips -->
+      <div class="preset-chips-row" id="preset-chips-container">
+        <span class="chip-label">Quick Prompts:</span>
+        <button class="chip-btn" data-prompt="Invert gravity upside down">Invert Gravity</button>
+        <button class="chip-btn" data-prompt="Zero gravity float mode">Zero-G Mode</button>
+        <button class="chip-btn" data-prompt="Lift only red blocks upward">Lift Red Blocks</button>
+        <button class="chip-btn" data-prompt="Make Spark super bouncy with zero friction">Bouncy Spark</button>
+        <button class="chip-btn" data-prompt="Push everything top right corner">Top-Right Push</button>
+      </div>
+
+      <!-- Natural Language Terminal Bar -->
+      <form class="terminal-input-bar" id="terminal-form">
+        <span class="terminal-prompt-symbol">syntax></span>
+        <input 
+          type="text" 
+          id="terminal-input" 
+          class="terminal-input" 
+          placeholder="Type physics command (e.g., 'Invert gravity for red blocks' or 'Float in zero gravity')..." 
+          autocomplete="off"
+        />
+        <button type="submit" class="btn-execute" id="btn-execute">
+          <span>RUN PROMPT</span> 🚀
+        </button>
+      </form>
+
+      <!-- Logs & API Mode Indicator -->
+      <div class="dock-footer">
+        <div class="terminal-hud-message" id="terminal-hud-message">
+          <span>💡 Ready. Input prompt or pick a preset chip to mutate physics.</span>
+        </div>
+        <div class="terminal-status-badge">
+          <div class="status-indicator" id="status-indicator"></div>
+          <span id="status-text">Deterministic Offline Parser</span>
+          <button class="chip-btn" id="btn-inspect-json" style="padding: 2px 6px; font-size: 0.65rem;">JSON Inspector</button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- API Key Modal -->
+  <div class="modal-overlay" id="modal-api-key">
+    <div class="modal-card">
+      <div class="modal-title">Google Gemini API Configuration</div>
+      <div class="modal-body">
+        Enter your Google Gemini API key to enable direct LLM physics prompt parsing. If no key is provided, SyntaxShift uses its built-in sub-10ms <strong>Deterministic Offline Parser</strong>!
+        <br /><br />
+        <input type="password" id="input-api-key" class="input-field" placeholder="AIzaSy..." />
+      </div>
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button class="btn-icon" id="btn-save-api-key">Save & Activate</button>
+        <button class="btn-icon danger" id="btn-close-api-key">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Level Selection Modal -->
+  <div class="modal-overlay" id="modal-level-select">
+    <div class="modal-card" style="max-width: 600px;">
+      <div class="modal-title">Select Chamber</div>
+      <div class="modal-body" id="chambers-list-container" style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- Filled dynamically -->
+      </div>
+      <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+        <button class="btn-icon danger" id="btn-close-levels">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JSON Output Inspector Modal -->
+  <div class="modal-overlay" id="modal-json-inspector">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-title">AI Physics Payload JSON Inspector</div>
+      <div class="modal-body">
+        Below is the exact structured JSON parsed from your prompt, consumed directly by the Matter.js AntiGravity Engine:
+        <br /><br />
+        <pre class="json-inspector" id="json-inspector-content">// No prompt executed yet.</pre>
+      </div>
+      <div style="display: flex; justify-content: flex-end;">
+        <button class="btn-icon danger" id="btn-close-json">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
