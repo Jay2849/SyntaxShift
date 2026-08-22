@@ -6,3 +6,4 @@ export function calculateAirDrag(velocity, dragCoeff = 0.04) {
 }
 
 export function applyTerminalVelocityDrag(speed) { return Math.min(speed, 15.0); }
+/** AirDrag unit version 1.0 */
